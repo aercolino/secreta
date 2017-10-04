@@ -1,4 +1,4 @@
-const dbg = require('debug')('ServerlessPK');
+const dbg = require('debug')('Secreta');
 
 const debug = (...args) => dbg('spk-create', ...args);
 
@@ -18,7 +18,7 @@ const AwsServiceError = SuperError.subclass('AwsServiceError');
 const AwsLambdaExecError = SuperError.subclass('AwsLambdaExecError');
 
 let lambdaService;
-const functionName = 'ServerlessPK_CreatePairOfKeys';
+const functionName = 'Secreta_CreatePairOfKeys';
 
 module.exports = (pairId, options = {}) => {
     const { region } = options;
@@ -77,7 +77,7 @@ function deployFunction(zipFile) {
         Handler: 'createPairOfKeys.handler',
         Role: 'arn:aws:iam::123456789012:role/spk-CreatePairOfKeys-role',
         Runtime: 'nodejs6.10',
-        Description: 'ServerlessPK function to create a pair of keys, store the private key, return the public key.',
+        Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
         MemorySize: 128,
         Timeout: 60,
     };

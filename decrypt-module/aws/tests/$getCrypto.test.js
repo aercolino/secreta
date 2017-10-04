@@ -50,13 +50,13 @@ describe('spk-decrypt', function () {
             done();
         }));
 
-        it('should call SSM getParameter with name ServerlessPK/privateKey/<pairId>', sinonTest(function () {
+        it('should call SSM getParameter with name Secreta/privateKey/<pairId>', sinonTest(function () {
             const ssmGetParameter = stubSsmGetParameter(this, null, { Parameter: { Value: 'private key stuff' } });
             stubRSA(this);
             const pairId = makeUnique('juanito');
             return spk.$getCrypto(pairId).then(() => {
                 expect(ssmGetParameter).to.have.been.calledWithMatch(sinon.match({
-                    Name: sinon.match(new RegExp(`^/ServerlessPK/privateKey/${pairId}$`)),
+                    Name: sinon.match(new RegExp(`^/Secreta/privateKey/${pairId}$`)),
                     WithDecryption: sinon.match(true),
                 }));
             });

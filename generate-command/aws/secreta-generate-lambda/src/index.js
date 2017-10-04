@@ -1,7 +1,7 @@
 /**
  * Create a pair of PKI keys for the given pairId.
- * Store the privateKey in an SSM parameter named /ServerlessPK/privateKey/${event.pairId}.
- * Tag the parameter with key 'ServerlessPK' and value 'privateKey'.
+ * Store the privateKey in an SSM parameter named /Secreta/privateKey/${event.pairId}.
+ * Tag the parameter with key 'Secreta' and value 'privateKey'.
  *
  * Return the { publicKey: <PEM text> } object or an { error: <Error message> } object.
  *
@@ -9,8 +9,8 @@
  * @param context
  * @param callback
  */
-const dbgKeys = require('debug')('ServerlessPK:Keys');
-const dbg = require('debug')('ServerlessPK');
+const dbgKeys = require('debug')('Secreta:Keys');
+const dbg = require('debug')('Secreta');
 
 const debugKeys = (...args) => dbgKeys('createPairOfKeys', ...args);
 const debug = (...args) => dbg('createPairOfKeys', ...args);
@@ -38,11 +38,11 @@ module.exports = {
             region: options.region,
         });
         const pair = {};
-        const parameterName = `/ServerlessPK/privateKey/${options.pairId}`;
+        const parameterName = `/Secreta/privateKey/${options.pairId}`;
         debug('handler: about to run', options);
         createKeys(pair)
             .then(() => createParam(parameterName, pair.privateKey))
-            .then(() => tagParam(parameterName, 'ServerlessPK', 'privateKey'))
+            .then(() => tagParam(parameterName, 'Secreta', 'privateKey'))
             .then(() => callback(null, { publicKey: pair.publicKey }))
             .catch((err) => {
                 debug(err);
@@ -89,7 +89,7 @@ function createParam(parameterName, parameterValue) {
         Value: parameterValue,
         Type: 'SecureString',
         AllowedPattern: '^-----BEGIN RSA PRIVATE KEY-----[\\s\\S]+-----END RSA PRIVATE KEY-----\\s*$',
-        Description: 'ServerlessPK RSA Private Key',
+        Description: 'Secreta RSA Private Key',
         Overwrite: false,
     };
     if (debug.enabled) {
@@ -122,4 +122,4 @@ function tagParam(parameterName, tagKey, tagValue) {
         });
 }
 
-debug('ServerlessPK: createPairOfKeys module loaded');
+debug('Secreta: createPairOfKeys module loaded');

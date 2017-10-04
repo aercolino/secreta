@@ -1,5 +1,5 @@
-const dbgSecrets = require('debug')('ServerlessPK:Secrets');
-const dbg = require('debug')('ServerlessPK');
+const dbgSecrets = require('debug')('Secreta:Secrets');
+const dbg = require('debug')('Secreta');
 
 const debugSecrets = (...args) => dbgSecrets('spk-decrypt', ...args);
 const debug = (...args) => dbg('spk-decrypt', ...args);
@@ -63,7 +63,7 @@ const self = module.exports = {
             return Promise.resolve(cryptoCache[pairId]);
         }
         const params = {
-            Name: `/ServerlessPK/privateKey/${pairId}`,
+            Name: `/Secreta/privateKey/${pairId}`,
             WithDecryption: true,
         };
         return $callMethod(ssmService, 'getParameter', params)

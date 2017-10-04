@@ -1,4 +1,4 @@
-const dbg = require('debug')('ServerlessPK');
+const dbg = require('debug')('Secreta');
 
 const debug = (...args) => dbg('spk-encrypt', ...args);
 

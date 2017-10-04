@@ -59,15 +59,15 @@ describe('AWS Lambda: createPairOfKeys', function () {
         return invoke({ pairId: 'pepito', region: 'us-east-1', account: '123456789012' }, {}, callbackSpy)
             .then(() => {
                 expect(ssmPutParameter).to.have.been.calledWith(sinon.match({
-                    Name: sinon.match('/ServerlessPK/privateKey/pepito'),
+                    Name: sinon.match('/Secreta/privateKey/pepito'),
                     Value: sinon.match(/^-----BEGIN RSA PRIVATE KEY-----[\s\S]+-----END RSA PRIVATE KEY-----\s*$/),
                 }));
 
                 expect(ssmAddTagsToResource).to.have.been.calledWith(sinon.match({
                     ResourceId: sinon.match(':us-east-1:123456789012:')
-                        && sinon.match('/ServerlessPK/privateKey/pepito'),
+                        && sinon.match('/Secreta/privateKey/pepito'),
                     Tags: [{
-                        Key: sinon.match('ServerlessPK'),
+                        Key: sinon.match('Secreta'),
                         Value: sinon.match('privateKey'),
                     }],
                 }));
