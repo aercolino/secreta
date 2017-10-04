@@ -74,7 +74,7 @@ function deployFunction(zipFile) {
             ZipFile: zipFile,
         },
         FunctionName: functionName,
-        Handler: 'createPairOfKeys.handler',
+        Handler: 'generateKeyPair.handler',
         Role: 'arn:aws:iam::123456789012:role/spk-Generate-role',
         Runtime: 'nodejs6.10',
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
@@ -130,7 +130,7 @@ function invokeFunction(payload) {
 }
 
 function zipFunction() {
-    const lambdaFilename = path.resolve(`${__dirname}/../../lambdas/createPairOfKeys/dist/createPairOfKeys.js`);
+    const lambdaFilename = path.resolve(`${__dirname}/../../lambdas/generateKeyPair/dist/generateKeyPair.js`);
     if (!fs.existsSync(lambdaFilename)) {
         throw new Error(`Expected a lambda function at ${lambdaFilename}`);
     }

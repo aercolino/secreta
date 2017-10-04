@@ -48,7 +48,7 @@ function stubFsWriteFileSync(test) {
 
 function stubFsExistsSync(test, result) {
     const stub = test.stub(fs, 'existsSync');
-    fs.existsSync.withArgs(sinon.match(/\/createPairOfKeys\.js$/)).returns(result);
+    fs.existsSync.withArgs(sinon.match(/\/generateKeyPair\.js$/)).returns(result);
     fs.existsSync.callThrough();
     return stub;
 }

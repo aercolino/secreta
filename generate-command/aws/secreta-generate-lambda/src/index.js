@@ -12,8 +12,8 @@
 const dbgKeys = require('debug')('Secreta:Keys');
 const dbg = require('debug')('Secreta');
 
-const debugKeys = (...args) => dbgKeys('createPairOfKeys', ...args);
-const debug = (...args) => dbg('createPairOfKeys', ...args);
+const debugKeys = (...args) => dbgKeys('generateKeyPair', ...args);
+const debug = (...args) => dbg('generateKeyPair', ...args);
 
 const forge = require('node-forge');
 const AWS = require('aws-sdk');
@@ -122,4 +122,4 @@ function tagParam(parameterName, tagKey, tagValue) {
         });
 }
 
-debug('Secreta: createPairOfKeys module loaded');
+debug('Secreta: generateKeyPair module loaded');
