@@ -111,7 +111,7 @@ $ secreta-encrypt <ID>
 + it copies each property with a `SECRETUM` value in the configuration from the file at `<secrets_path>` to a memory object
 + it JSON-stringifies the memory object to a plaintext
 + it encrypts the plaintext to a ciphertext, using the public key at `<key_path>/<ID>.pem`
-+ it saves the `<ID>` and the ciphertext into the file at `<encrypted_path>/secrets.spk`, using the template `ServerlessPK/privateKey/${ID}\n${ciphertext}`
++ it saves the `<ID>` and the ciphertext into the file at `<encrypted_path>/<ID>.spk`
 
 
 
