@@ -9,7 +9,7 @@ const forge = require('node-forge');
 
 const pki = forge.pki;
 
-const { fixtures } = require('./spk-encrypt.fixtures');
+const { fixtures } = require('./secreta-encrypt.fixtures');
 
 const chai = require('chai');
 const sinon = require('sinon');
@@ -19,7 +19,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const { expect } = chai;
 
-const spkEncrypt = require('../src/spk-encrypt');
+const spkEncrypt = require('../src/secreta-encrypt');
 
 
 function stubConfigUtilLoadFileConfigsMulti(test, results) {
@@ -76,7 +76,7 @@ function $muted(fn, ...args) {
 
 console.log('Node version', process.version);
 
-describe('spk-encrypt', function () {
+describe('secreta-encrypt', function () {
 
     it('should throw when there is no file of a public key at the supposed place', sinonTest(function () {
         stubFsExistsSync(this, '/tmp/pepito.pem', false);

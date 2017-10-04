@@ -1,6 +1,6 @@
 const dbg = require('debug')('Secreta');
 
-const debug = (...args) => dbg('spk-encrypt', ...args);
+const debug = (...args) => dbg('secreta-encrypt', ...args);
 
 const displayLog = console.log; // use console.log for developing/debugging, displayLog for functionality
 const displayError = console.error; // use console.error for developing/debugging, displayError for functionality
@@ -52,7 +52,7 @@ module.exports = (pairId, options = {}) => new Promise((resolve) => {
         throw new Error(`Expected the secrets configuration directory at ${secretsDir}`);
     }
 
-    displayLog(`> spk-encrypt ${pairId} 
+    displayLog(`> secreta-encrypt ${pairId} 
     --key ${keyDir} 
     --config ${configDir} 
     --secrets ${secretsDir} 
