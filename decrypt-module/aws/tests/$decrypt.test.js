@@ -24,7 +24,7 @@ function stubSsmGetParameter(test, error = null, result = null) {
 // --
 const spk = require('../src/index.js');
 
-describe('spk-decrypt', function () {
+describe('secreta-decrypt', function () {
 
     describe('$decrypt', function () {
 

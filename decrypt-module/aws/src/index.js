@@ -1,8 +1,8 @@
 const dbgSecrets = require('debug')('Secreta:Secrets');
 const dbg = require('debug')('Secreta');
 
-const debugSecrets = (...args) => dbgSecrets('spk-decrypt', ...args);
-const debug = (...args) => dbg('spk-decrypt', ...args);
+const debugSecrets = (...args) => dbgSecrets('secreta-decrypt', ...args);
+const debug = (...args) => dbg('secreta-decrypt', ...args);
 
 const path = require('path');
 const fs = require('fs');

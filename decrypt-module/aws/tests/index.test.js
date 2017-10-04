@@ -14,7 +14,7 @@ const spk = require('../src/index.js');
 
 console.log('Node version', process.version);
 
-describe('spk-decrypt', function () {
+describe('secreta-decrypt', function () {
 
     it('should export $mergeSecrets, $decrypt, and $getCrypto functions', sinonTest(function (done) {
         expect(spk.$mergeSecrets).to.be.a('function');

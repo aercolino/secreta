@@ -32,7 +32,7 @@ function makeUnique(x) {
 // --
 const spk = require('../src/index.js');
 
-describe('spk-decrypt', function () {
+describe('secreta-decrypt', function () {
 
     describe('$getCrypto', function () {
 
