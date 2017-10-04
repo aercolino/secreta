@@ -19,7 +19,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const { expect } = chai;
 
-const secretaEncrypt = require('../src/secreta-encrypt');
+const secretaEncrypt = require('../src/encrypt');
 
 
 function stubConfigUtilLoadFileConfigsMulti(test, results) {
