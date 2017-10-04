@@ -1,6 +1,6 @@
 const dbg = require('debug')('Secreta');
 
-const debug = (...args) => dbg('spk-create', ...args);
+const debug = (...args) => dbg('secreta-generate', ...args);
 
 const displayLog = console.log; // use console.log for developing/debugging, displayLog for functionality
 const displayError = console.error; // use console.error for developing/debugging, displayError for functionality
@@ -24,7 +24,7 @@ module.exports = (pairId, options = {}) => {
     const { region } = options;
     lambdaService = region ? new AWS.Lambda({ region }) : new AWS.Lambda();
     const keyDir = (options.key && path.resolve(options.key)) || os.homedir();
-    displayLog(`> spk-create ${pairId} 
+    displayLog(`> secreta-generate ${pairId} 
     --key ${keyDir} 
     --region ${region}`);
 

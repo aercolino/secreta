@@ -4,7 +4,7 @@ const { $wrapPromise } = require('@aercolino/wrap-promise');
 const fs = require('fs');
 const AWS = require('mock-aws');
 
-const { fixtures } = require('./spk-create.fixtures');
+const { fixtures } = require('./secreta-generate.fixtures');
 
 const chai = require('chai');
 const sinon = require('sinon');
@@ -15,7 +15,7 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 const zipitShell = require('../src/zipit-shell');
-const spkCreate = require('../src/spk-create');
+const spkCreate = require('../src/secreta-generate');
 
 function stubZipit(test, error = null, result = null) {
     const stub = test.stub().callsArgWith(1, error, result);
@@ -68,7 +68,7 @@ function $muted(fn, ...args) {
 
 console.log('Node version', process.version);
 
-describe('spk-create', function () {
+describe('secreta-generate', function () {
 
     it('should deploy the lambda function if it is not already deployed', sinonTest(function () {
         const lambdaGetFunctionConfiguration = stubLambdaGetFunctionConfiguration(
