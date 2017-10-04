@@ -1,0 +1,71 @@
+{
+  "name": "@aercolino/secreta-encrypt",
+  "version": "0.1.0",
+  "description": "Encrypt configuration secrets with a public key.",
+  "repository": "aercolino/secreta",
+  "engines": {
+    "node": ">=6.10.3"
+  },
+  "main": "src/index.js",
+  "bin": {
+    "secreta-encrypt": "src/index.js"
+  },
+  "scripts": {
+    "test": "nyc mocha tests/**/*.test.js",
+    "coveralls": "npm test && nyc report --reporter=text-lcov | coveralls"
+  },
+  "keywords": [
+    "encrypt",
+    "configuration",
+    "secrets",
+    "rsa",
+    "public key",
+    "cryptography"
+  ],
+  "author": "Andrea Ercolino <andowebsit.es@gmail.com> (http://andowebsit.es)",
+  "homepage": "https://github.com/aercolino/secreta",
+  "bugs": { 
+    "url" : "https://github.com/aercolino/secreta/issues",
+    "email" : "andowebsit.es+secreta@gmail.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@aercolino/object-paths": "^0.1.0",
+    "@aercolino/wrap-promise": "^0.1.1",
+    "aws-sdk": "^2.110.0",
+    "commander": "^2.11.0",
+    "config": "^1.26.2",
+    "debug": "^3.0.1",
+    "lodash": "^4.17.4",
+    "node-forge": "^0.7.1",
+    "promise-to-call": "^0.1.0",
+    "properties": "^1.2.1",
+    "super-error": "^2.1.0",
+    "zipit": "^1.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "console.mute": "^0.3.0",
+    "mocha": "^3.5.3",
+    "mock-aws": "^1.2.3",
+    "nyc": "^11.2.1",
+    "sinon": "^3.3.0",
+    "sinon-chai": "^2.13.0",
+    "sinon-test": "^2.1.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "mocha": true
+    },
+    "plugins": [
+      "mocha"
+    ],
+    "rules": {
+      "prefer-arrow-callback": 0,
+      "func-names": 0,
+      "no-unused-expressions": 0,
+      "padded-blocks": 0
+    }
+  }
+}

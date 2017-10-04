@@ -1,0 +1,13 @@
+{
+  "Customer": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": "SPK_SECRET",
+      "dbName": "customers"
+    },
+    "credit": {
+      "initialLimit": "SPK_SECRET",
+      "initialDays": 1
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[ignore]
+.*/build/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
