@@ -6,7 +6,7 @@ module.exports.fixtures = {
             secrets: {},
         },
         {
-            case: 'no SPK_SECRET',
+            case: 'no SECRETUM',
             config: { plaintext: 'value' },
             secrets: { other: 'secret' },
         },
@@ -14,28 +14,28 @@ module.exports.fixtures = {
 
     whenSomePlaintextSecretsAreMissing: [
         {
-            case: 'all SPK_SECRET, no secrets',
-            config: { ciphertext: 'SPK_SECRET' },
+            case: 'all SECRETUM, no secrets',
+            config: { ciphertext: 'SECRETUM' },
             secrets: {},
         },
         {
-            case: 'some SPK_SECRET without corresponding secret: missing scalar',
-            config: { plaintext: 'value', ciphertext: 'SPK_SECRET', other: 'SPK_SECRET' },
+            case: 'some SECRETUM without corresponding secret: missing scalar',
+            config: { plaintext: 'value', ciphertext: 'SECRETUM', other: 'SECRETUM' },
             secrets: { other: 'secret' },
         },
         {
-            case: 'some SPK_SECRET without corresponding secret: missing array index',
-            config: { plaintext: 'value', ciphertext: ['plaintext', 'SPK_SECRET'], other: 'SPK_SECRET' },
+            case: 'some SECRETUM without corresponding secret: missing array index',
+            config: { plaintext: 'value', ciphertext: ['plaintext', 'SECRETUM'], other: 'SECRETUM' },
             secrets: { other: 'secret', ciphertext: ['plaintext'] },
         },
         {
-            case: 'some SPK_SECRET without corresponding secret: missing object key',
-            config: { plaintext: 'value', ciphertext: { key1: 'plaintext', key2: 'SPK_SECRET' }, other: 'SPK_SECRET' },
+            case: 'some SECRETUM without corresponding secret: missing object key',
+            config: { plaintext: 'value', ciphertext: { key1: 'plaintext', key2: 'SECRETUM' }, other: 'SECRETUM' },
             secrets: { other: 'secret', ciphertext: { key1: 'plaintext', key3: 'plaintext' } },
         },
         {
-            case: 'some deep SPK_SECRET without corresponding deep secret',
-            config: { some: { deeper: { plaintext: 'value', ciphertext: 'SPK_SECRET' } } },
+            case: 'some deep SECRETUM without corresponding deep secret',
+            config: { some: { deeper: { plaintext: 'value', ciphertext: 'SECRETUM' } } },
             secrets: { some: { deeper: { other: 'secret' } } }, // it's possible to have this path here but not in config
         },
     ],
@@ -43,32 +43,32 @@ module.exports.fixtures = {
     whenEverythingIsJustAsItShouldBe: [
         {
             case: 'scalar secret',
-            config: { plaintext: 'value', ciphertext: 'SPK_SECRET' },
+            config: { plaintext: 'value', ciphertext: 'SECRETUM' },
             secrets: { ciphertext: 'whatever' },
         },
         {
             case: 'array secret',
-            config: { plaintext: 'value', ciphertext: 'SPK_SECRET' },
+            config: { plaintext: 'value', ciphertext: 'SECRETUM' },
             secrets: { ciphertext: ['some', 'value'] },
         },
         {
             case: 'object secret',
-            config: { plaintext: 'value', ciphertext: 'SPK_SECRET' },
+            config: { plaintext: 'value', ciphertext: 'SECRETUM' },
             secrets: { ciphertext: { 'some': 'value' } },
         },
         {
             case: 'deep scalar secret',
             config: {
-                some: { deeper: { plaintext: 'value', ciphertext: 'SPK_SECRET' } },
+                some: { deeper: { plaintext: 'value', ciphertext: 'SECRETUM' } },
             },
             secrets: {
-                some: { deeper: { ciphertext: 'SPK_SECRET' } },
+                some: { deeper: { ciphertext: 'SECRETUM' } },
             },
         },
         {
             case: 'deep array secret',
             config: {
-                some: { deeper: { plaintext: 'value', ciphertext: 'SPK_SECRET' } },
+                some: { deeper: { plaintext: 'value', ciphertext: 'SECRETUM' } },
             },
             secrets: {
                 some: { deeper: { ciphertext: ['some', 'value'] } },
@@ -77,7 +77,7 @@ module.exports.fixtures = {
         {
             case: 'deep object secret',
             config: {
-                some: { deeper: { plaintext: 'value', ciphertext: 'SPK_SECRET' } },
+                some: { deeper: { plaintext: 'value', ciphertext: 'SECRETUM' } },
             },
             secrets: {
                 some: { deeper: { ciphertext: { 'some': 'value' } } },

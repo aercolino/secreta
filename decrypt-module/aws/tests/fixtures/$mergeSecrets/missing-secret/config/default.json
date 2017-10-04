@@ -2,11 +2,11 @@
   "Customer": {
     "dbConfig": {
       "host": "localhost",
-      "port": "SPK_SECRET",
+      "port": "SECRETUM",
       "dbName": "customers"
     },
     "credit": {
-      "initialLimit": "SPK_SECRET",
+      "initialLimit": "SECRETUM",
       "initialDays": 1
     }
   }

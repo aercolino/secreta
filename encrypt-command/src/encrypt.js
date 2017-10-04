@@ -60,7 +60,7 @@ module.exports = (pairId, options = {}) => new Promise((resolve) => {
 
 
     const allValues = config.util.loadFileConfigs(configDir);
-    const selectedSecretsPaths = selectPaths(allValues, /^SPK_SECRET$/);
+    const selectedSecretsPaths = selectPaths(allValues, /^SECRETUM$/);
     if (selectedSecretsPaths.length === 0) {
         displayLog('No secrets to protect.');
         return resolve({ length: -1 });

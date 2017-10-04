@@ -37,7 +37,7 @@ const self = module.exports = {
                     .map(JSON.parse)
                     .reduce((acc, plaintextObject) => Object.assign(acc, plaintextObject), {});
                 debugSecrets('$mergeSecrets: allSecrets', allSecrets);
-                const configPaths = selectPaths(config, /^SPK_SECRET$/);
+                const configPaths = selectPaths(config, /^SECRETUM$/);
                 debugSecrets('$mergeSecrets: configPaths', configPaths);
                 const result = lodash.cloneDeep(config);
                 configPaths.forEach(configPath => {
