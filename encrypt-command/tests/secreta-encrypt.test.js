@@ -19,7 +19,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const { expect } = chai;
 
-const spkEncrypt = require('../src/secreta-encrypt');
+const secretaEncrypt = require('../src/secreta-encrypt');
 
 
 function stubConfigUtilLoadFileConfigsMulti(test, results) {
@@ -80,7 +80,7 @@ describe('secreta-encrypt', function () {
 
     it('should throw when there is no file of a public key at the supposed place', sinonTest(function () {
         stubFsExistsSync(this, '/tmp/pepito.pem', false);
-        return $muted(spkEncrypt, 'pepito', { key: '/tmp' })
+        return $muted(secretaEncrypt, 'pepito', { key: '/tmp' })
             .then((result) => {
                 expect(result.err).to.match(/Expected a public key/);
             });
@@ -88,7 +88,7 @@ describe('secreta-encrypt', function () {
 
     it('should throw when there is no public key into the file at the supposed place', sinonTest(function () {
         stubPkiPublicKeyFromPem(this, new Error('some error from forge.pki'));
-        return $muted(spkEncrypt, 'pepito', { key: './tests' })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests' })
             .then((result) => {
                 expect(result).to.have.property('err');
             });
@@ -106,7 +106,7 @@ describe('secreta-encrypt', function () {
             [configDir]: true,
             [secretsDir]: true,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected a directory/);
             });
@@ -124,7 +124,7 @@ describe('secreta-encrypt', function () {
             [configDir]: true,
             [secretsDir]: true,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected no file/);
             });
@@ -142,7 +142,7 @@ describe('secreta-encrypt', function () {
             [configDir]: false,
             [secretsDir]: true,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected the configuration directory/);
             });
@@ -160,7 +160,7 @@ describe('secreta-encrypt', function () {
             [configDir]: false,
             [secretsDir]: true,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected the configuration directory/);
             });
@@ -178,7 +178,7 @@ describe('secreta-encrypt', function () {
             [configDir]: true,
             [secretsDir]: false,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected the secrets configuration directory/);
             });
@@ -196,7 +196,7 @@ describe('secreta-encrypt', function () {
             [configDir]: true,
             [secretsDir]: false,
         });
-        return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+        return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
             .then((result) => {
                 expect(result.err).to.match(/Expected the secrets configuration directory/);
             });
@@ -220,7 +220,7 @@ describe('secreta-encrypt', function () {
                 [secretsDir]: value.secrets,
             });
 
-            return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+            return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
                 .then((result) => {
                     expect(result.data.length).to.eql(-1);
                 });
@@ -245,7 +245,7 @@ describe('secreta-encrypt', function () {
                 [secretsDir]: value.secrets,
             });
 
-            return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+            return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
                 .then((result) => {
                     expect(result.err).to.match(/No plaintext available/);
                 });
@@ -271,7 +271,7 @@ describe('secreta-encrypt', function () {
             });
             const fsWriteFileSync = stubFsWriteFileSync(this);
 
-            return $muted(spkEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
+            return $muted(secretaEncrypt, 'pepito', { key: './tests', output: outputDir, config: configDir, secrets: secretsDir })
                 .then((result) => {
                     expect(encrypt).to.have.been.called;
                     expect(fsWriteFileSync).to.have.been.called;
