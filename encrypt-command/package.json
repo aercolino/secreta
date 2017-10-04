@@ -24,7 +24,7 @@
   ],
   "author": "Andrea Ercolino <andowebsit.es@gmail.com> (http://andowebsit.es)",
   "homepage": "https://github.com/aercolino/secreta",
-  "bugs": { 
+  "bugs": {
     "url" : "https://github.com/aercolino/secreta/issues",
     "email" : "andowebsit.es+secreta@gmail.com"
   },
@@ -32,22 +32,17 @@
   "dependencies": {
     "@aercolino/object-paths": "^0.1.0",
     "@aercolino/wrap-promise": "^0.1.1",
-    "aws-sdk": "^2.110.0",
     "commander": "^2.11.0",
     "config": "^1.26.2",
     "debug": "^3.0.1",
     "lodash": "^4.17.4",
     "node-forge": "^0.7.1",
-    "promise-to-call": "^0.1.0",
-    "properties": "^1.2.1",
-    "super-error": "^2.1.0",
-    "zipit": "^1.0.2"
+    "properties": "^1.2.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "console.mute": "^0.3.0",
     "mocha": "^3.5.3",
-    "mock-aws": "^1.2.3",
     "nyc": "^11.2.1",
     "sinon": "^3.3.0",
     "sinon-chai": "^2.13.0",
