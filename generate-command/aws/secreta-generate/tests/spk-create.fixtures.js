@@ -1,9 +1,9 @@
 module.exports.fixtures = {
     getFunctionConfigurationResponse: {
-        FunctionName: 'SecretaGenerate',
-        FunctionArn: 'arn:aws:lambda:us-east-2:123456789012:function:SecretaGenerate',
+        FunctionName: 'Secreta_GenerateKeyPair',
+        FunctionArn: 'arn:aws:lambda:us-east-2:123456789012:function:Secreta_GenerateKeyPair',
         Runtime: 'nodejs6.10',
-        Role: 'arn:aws:iam::123456789012:role/spk-Generate-role',
+        Role: 'arn:aws:iam::123456789012:role/spk-GenerateKeyPair-role',
         Handler: 'generateKeyPair.handler',
         CodeSize: 568344,
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
@@ -17,10 +17,10 @@ module.exports.fixtures = {
         MasterArn: null,
     },
     createFunctionResponse: {
-        FunctionName: 'SecretaGenerate',
-        FunctionArn: 'arn:aws:lambda:us-east-2:123456789012:function:SecretaGenerate',
+        FunctionName: 'Secreta_GenerateKeyPair',
+        FunctionArn: 'arn:aws:lambda:us-east-2:123456789012:function:Secreta_GenerateKeyPair',
         Runtime: 'nodejs6.10',
-        Role: 'arn:aws:iam::123456789012:role/spk-Generate-role',
+        Role: 'arn:aws:iam::123456789012:role/spk-GenerateKeyPair-role',
         Handler: 'generateKeyPair.handler',
         CodeSize: 568245,
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
