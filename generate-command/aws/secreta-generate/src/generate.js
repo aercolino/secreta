@@ -18,7 +18,7 @@ const AwsServiceError = SuperError.subclass('AwsServiceError');
 const AwsLambdaExecError = SuperError.subclass('AwsLambdaExecError');
 
 let lambdaService;
-const functionName = 'Secreta_CreatePairOfKeys';
+const functionName = 'SecretaGenerate';
 
 module.exports = (pairId, options = {}) => {
     const { region } = options;
@@ -75,7 +75,7 @@ function deployFunction(zipFile) {
         },
         FunctionName: functionName,
         Handler: 'createPairOfKeys.handler',
-        Role: 'arn:aws:iam::123456789012:role/spk-CreatePairOfKeys-role',
+        Role: 'arn:aws:iam::123456789012:role/spk-Generate-role',
         Runtime: 'nodejs6.10',
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
         MemorySize: 128,
