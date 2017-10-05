@@ -1,7 +1,7 @@
 {
   "name": "@aercolino/secreta-decrypt",
   "version": "0.1.0",
-  "description": "Decrypt configuration secrets with a private key.",
+  "description": "Decrypt configuration secrets with a private key. (node module for AWS Lambda functions)",
   "repository": "aercolino/secreta",
   "engines": {
     "node": ">=6.10.3"
@@ -12,7 +12,7 @@
   },
   "author": "Andrea Ercolino <andowebsit.es@gmail.com> (http://andowebsit.es)",
   "homepage": "https://github.com/aercolino/secreta",
-  "bugs": { 
+  "bugs": {
     "url" : "https://github.com/aercolino/secreta/issues",
     "email" : "andowebsit.es+secreta@gmail.com"
   },
