@@ -23,7 +23,7 @@ const pki = forge.pki;
 const cryptoCache = {};
 
 const self = module.exports = {
-    $mergeSecrets(config, pattern = '*.spk') {
+    $mergeSecrets(config, pattern = '*.secreta') {
         return $callFunction(glob, pattern)
             .then((filenames) => {
                 debug('$mergeSecrets: filenames', filenames);

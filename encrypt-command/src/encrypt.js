@@ -31,7 +31,7 @@ module.exports = (pairId, options = {}) => new Promise((resolve) => {
     if (!fs.existsSync(outputDir)) {
         throw new Error(`Expected a directory for the encrypted secrets at ${outputDir}`);
     }
-    const encryptedFilename = `${outputDir}/${pairId}.spk`;
+    const encryptedFilename = `${outputDir}/${pairId}.secreta`;
     if (fs.existsSync(encryptedFilename)) {
         throw new Error(`Expected no file at ${encryptedFilename}`);
     }

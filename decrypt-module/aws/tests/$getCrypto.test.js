@@ -30,7 +30,7 @@ function makeUnique(x) {
 }
 
 // --
-const spk = require('../src/index.js');
+const secretaDecrypt = require('../src/index.js');
 
 describe('secreta-decrypt', function () {
 
@@ -38,14 +38,14 @@ describe('secreta-decrypt', function () {
 
         it('should throw when its pairId argument is not a string', sinonTest(function (done) {
             expect(() => {
-                spk.$getCrypto(1);
+                secretaDecrypt.$getCrypto(1);
             }).to.throw();
             done();
         }));
 
         it('should throw when its pairId argument is an empty string', sinonTest(function (done) {
             expect(() => {
-                spk.$getCrypto('');
+                secretaDecrypt.$getCrypto('');
             }).to.throw();
             done();
         }));
@@ -54,7 +54,7 @@ describe('secreta-decrypt', function () {
             const ssmGetParameter = stubSsmGetParameter(this, null, { Parameter: { Value: 'private key stuff' } });
             stubRSA(this);
             const pairId = makeUnique('juanito');
-            return spk.$getCrypto(pairId).then(() => {
+            return secretaDecrypt.$getCrypto(pairId).then(() => {
                 expect(ssmGetParameter).to.have.been.calledWithMatch(sinon.match({
                     Name: sinon.match(new RegExp(`^/Secreta/privateKey/${pairId}$`)),
                     WithDecryption: sinon.match(true),
@@ -66,15 +66,15 @@ describe('secreta-decrypt', function () {
             const ssmGetParameter = stubSsmGetParameter(this, null, { Parameter: { Value: 'private key stuff' } });
             stubRSA(this);
             const pairID = makeUnique('juanito');
-            return spk.$getCrypto(pairID)
-                .then(() => spk.$getCrypto(pairID)
+            return secretaDecrypt.$getCrypto(pairID)
+                .then(() => secretaDecrypt.$getCrypto(pairID)
                     .then(() => expect(ssmGetParameter).to.have.been.calledOnce))
         }));
 
         it('should throw when SSM getParameter returns an error', sinonTest(function (done) {
             const ssmGetParameter = stubSsmGetParameter(this, new Error('ParameterNotFound'));
             stubRSA(this);
-            spk.$getCrypto(makeUnique('juanito'))
+            secretaDecrypt.$getCrypto(makeUnique('juanito'))
                 .then(() => done(new Error('Expected a rejection.')))
                 .catch(err => {
                     expect(err.message).to.match(/ParameterNotFound/);

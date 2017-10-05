@@ -31,7 +31,7 @@ function stubSsmGetParameter(test, error = null, result = null) {
 }
 
 // --
-const spk = require('../src/index.js');
+const secretaDecrypt = require('../src/index.js');
 
 describe('secreta-decrypt', function () {
 
@@ -39,7 +39,7 @@ describe('secreta-decrypt', function () {
 
         it('should throw when some secret is missing', sinonTest(function (done) {
             const configWithSecrets = config.util.loadFileConfigs(`${fixtures}/$mergeSecrets/missing-secret/config`);
-            spk.$mergeSecrets(configWithSecrets, `${fixtures}/$mergeSecrets/missing-secret/**/*.spk`)
+            secretaDecrypt.$mergeSecrets(configWithSecrets, `${fixtures}/$mergeSecrets/missing-secret/**/*.secreta`)
                 .then((data) => {
                     done(new Error('Expected a rejection.'));
                 })
@@ -51,7 +51,7 @@ describe('secreta-decrypt', function () {
 
         it('should merge secrets when nothing is missing', sinonTest(function (done) {
             const configWithSecrets = config.util.loadFileConfigs(`${fixtures}/$mergeSecrets/all-fine/config`);
-            spk.$mergeSecrets(configWithSecrets, `${fixtures}/$mergeSecrets/all-fine/**/*.spk`)
+            secretaDecrypt.$mergeSecrets(configWithSecrets, `${fixtures}/$mergeSecrets/all-fine/**/*.secreta`)
                 .then((data) => {
                     expect(data.Customer.dbConfig.host).to.equal('localhost');
                     expect(data.Customer.dbConfig.port).to.equal(5984);

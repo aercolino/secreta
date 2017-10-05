@@ -97,7 +97,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is no output dir', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = '/tmp/config-dir';
         const secretsDir = '/tmp/secrets-dir';
         stubFsExistsSyncMulti(this, {
@@ -115,7 +115,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is already a pem file in the output dir', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = '/tmp/config-dir';
         const secretsDir = '/tmp/secrets-dir';
         stubFsExistsSyncMulti(this, {
@@ -133,7 +133,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is no config dir in the options', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = undefined;
         const secretsDir = '/tmp/secrets-dir';
         stubFsExistsSyncMulti(this, {
@@ -151,7 +151,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is no config dir in the system', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = '/tmp/config-dir';
         const secretsDir = '/tmp/secrets-dir';
         stubFsExistsSyncMulti(this, {
@@ -169,7 +169,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is no secrets dir in the options', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = '/tmp/config-dir';
         const secretsDir = undefined;
         stubFsExistsSyncMulti(this, {
@@ -187,7 +187,7 @@ describe('secreta-encrypt', function () {
     it('should throw when there is no secrets dir in the system', sinonTest(function () {
         stubPkiPublicKeyFromPem(this);
         const outputDir = '/tmp/output-dir';
-        const encryptedFilename = '/tmp/output-dir/pepito.spk';
+        const encryptedFilename = '/tmp/output-dir/pepito.secreta';
         const configDir = '/tmp/config-dir';
         const secretsDir = '/tmp/secrets-dir';
         stubFsExistsSyncMulti(this, {
@@ -206,7 +206,7 @@ describe('secreta-encrypt', function () {
         it(`should see when There Are No Secrets To Protect ${index}: ${value.case}`, sinonTest(function () {
             stubPkiPublicKeyFromPem(this);
             const outputDir = '/tmp/output-dir';
-            const encryptedFilename = '/tmp/output-dir/pepito.spk';
+            const encryptedFilename = '/tmp/output-dir/pepito.secreta';
             const configDir = '/tmp/config-dir';
             const secretsDir = '/tmp/secrets-dir';
             stubFsExistsSyncMulti(this, {
@@ -231,7 +231,7 @@ describe('secreta-encrypt', function () {
         it(`should throw when Some Plaintext Secrets Are Missing ${index}: ${value.case}`, sinonTest(function () {
             stubPkiPublicKeyFromPem(this);
             const outputDir = '/tmp/output-dir';
-            const encryptedFilename = '/tmp/output-dir/pepito.spk';
+            const encryptedFilename = '/tmp/output-dir/pepito.secreta';
             const configDir = '/tmp/config-dir';
             const secretsDir = '/tmp/secrets-dir';
             stubFsExistsSyncMulti(this, {
@@ -256,7 +256,7 @@ describe('secreta-encrypt', function () {
         it(`should work when Everything Is Just As It Should Be ${index}: ${value.case}`, sinonTest(function () {
             const encrypt = stubPkiPublicKeyFromPem(this, null, 'the garbage-looking ciphertext');
             const outputDir = '/tmp/output-dir';
-            const encryptedFilename = '/tmp/output-dir/pepito.spk';
+            const encryptedFilename = '/tmp/output-dir/pepito.secreta';
             const configDir = '/tmp/config-dir';
             const secretsDir = '/tmp/secrets-dir';
             stubFsExistsSyncMulti(this, {

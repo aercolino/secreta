@@ -22,7 +22,7 @@ function stubSsmGetParameter(test, error = null, result = null) {
 }
 
 // --
-const spk = require('../src/index.js');
+const secretaDecrypt = require('../src/index.js');
 
 describe('secreta-decrypt', function () {
 
@@ -31,9 +31,9 @@ describe('secreta-decrypt', function () {
         it('should decrypt a message', sinonTest(function () {
             const privateKeyAsPem = fs.readFileSync(`${fixtures}/private-pepito.pem`, 'utf8');
             stubSsmGetParameter(this, null, { Parameter: { Value: privateKeyAsPem } });
-            const ciphertext = fs.readFileSync(`${fixtures}/$decrypt/pepito.spk`).toString();
+            const ciphertext = fs.readFileSync(`${fixtures}/$decrypt/pepito.secreta`).toString();
             const plaintext = fs.readFileSync(`${fixtures}/$decrypt/plaintext.json`, 'utf8');
-            return expect(spk.$decrypt({pairId: 'pepito', ciphertext})).to.eventually.eql(plaintext);
+            return expect(secretaDecrypt.$decrypt({pairId: 'pepito', ciphertext})).to.eventually.eql(plaintext);
         }));
 
     });
