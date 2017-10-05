@@ -66,14 +66,13 @@ whatever:
 ### Inside the provider (eg: AWS)
 
 + The non-secret configuration values are kept in plaintext into configuration files (eg: `config.yml`)
-+ At rest, the secret configuration values are kept in ciphertext into the file at `secrets.spk`
-+ At run time, decryption of `secrets.spk` occurs in memory and all the names of `SECRETUM` values are linked to the matching plaintext values
++ At rest, the secret configuration values are kept in ciphertext into the file at `<ID>.secreta`
++ At run time, decryption of `<ID>.secreta` occurs in memory and all the names of `SECRETUM` values are linked to the matching plaintext values
 
 
 
 
 ## Secreta packages
-
 
 
 ### `secreta-generate`
@@ -99,10 +98,10 @@ $ secreta-generate <ID>
 
 ```
 $ secreta-encrypt <ID> 
-    --public-key [key_dir] 
-    --select [config_dir] 
-    --from [secrets_dir] 
-    --to [encrypted_dir]
+    --public-key <dir> 
+    --config <dir> 
+    --secrets <dir> 
+    --output <dir>
 ```
 
 + it loads the configuration ([currently using `node-config`](https://github.com/lorenwest/node-config)) from the files in the directory at `<config_path>`
@@ -111,18 +110,30 @@ $ secreta-encrypt <ID>
 + it copies each property with a `SECRETUM` value in the configuration from the file at `<secrets_path>` to a memory object
 + it JSON-stringifies the memory object to a plaintext
 + it encrypts the plaintext to a ciphertext, using the public key at `<key_path>/<ID>.pem`
-+ it saves the `<ID>` and the ciphertext into the file at `<encrypted_path>/<ID>.spk`
++ it saves the `<ID>` and the ciphertext into the file at `<encrypted_path>/<ID>.secreta`
 
 
 
-### `secreta-decrypt`
+### `secreta-decrypt` module
+
+This Secreta package is a node module for decrypting configuration secrets with a private key. 
+
++ It should be installed into the AWS Lambda function from which you need your secret configuration.
+
+#### Install
+
+```
+$ npm install --save @aercolino/secreta-decrypt
+```
+
+#### Usage
 
 ```
 const configWithoutSecrets = buildConfig(); // configuration object, with some 'SECRETUM' placeholders
-const pattern = '*.spk'; // default glob
-const spk = require('secreta-decrypt').$mergeSecrets(configWithoutSecrets, pattern);
+const pattern = '*.secreta'; // default glob
+const configPromise = require('secreta-decrypt').$mergeSecrets(configWithoutSecrets, pattern);
 
-exports.handler = (event, context, callback) => $spk.then((config) => {
+exports.handler = (event, context, callback) => configPromise.then((config) => {
 
     const decryptedValue = config.at.your.secret.path;
     // ...
@@ -131,7 +142,7 @@ exports.handler = (event, context, callback) => $spk.then((config) => {
 ```
 
 + the exported `$mergeSecrets` function takes a glob pattern of encrypted files to decrypt and returns a promise
-+ the `spk` constant above thus caches the resolved config
++ the `configPromise` constant above thus caches the resolved config
 
     + it gets each file matching the pattern
     + it extracts the `<ID>` of the private decryption key from the basename of the matched file
