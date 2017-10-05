@@ -10,7 +10,7 @@
   "scripts": {
     "flow": "flow",
     "start": "webpack --watch",
-    "test": "nyc mocha --compilers js:babel-core/register tests/**/*.test.js"
+    "test": "nyc mocha tests/**/*.test.js"
   },
   "keywords": [
     "generate",
@@ -30,18 +30,12 @@
   "dependencies": {
     "debug": "^3.0.1",
     "node-forge": "^0.7.1",
-    "promise-to-call": "^0.1.0"
+    "promise-to-call": "^0.1.0",
+    "supports-color": "^4.4.0"
   },
   "devDependencies": {
     "aws-sdk": "^2.112.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-flow": "^6.23.0",
     "chai": "^4.1.2",
-    "flow-bin": "^0.55.0",
     "json-loader": "^0.5.7",
     "mocha": "^3.5.1",
     "mock-aws": "^1.2.3",

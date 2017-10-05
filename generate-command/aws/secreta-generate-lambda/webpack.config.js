@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const name = path.basename(__dirname);
+const name = 'generateKeyPair';
 
 module.exports = {
     entry: {
-        [name]: `${__dirname}/src/index.js`,
+        [name]: `${__dirname}/src/generateKeyPair.js`,
     },
     output: {
         path: `${__dirname}/dist`,
@@ -16,11 +16,6 @@ module.exports = {
     target: 'node',
     module: {
         loaders: [ {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-            query: JSON.parse(fs.readFileSync(`${__dirname}/.babelrc`, { encoding: 'utf8' })),
-        }, {
             test: /\.json$/,
             loader: 'json-loader',
         } ],

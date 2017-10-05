@@ -1,69 +1,100 @@
-// @flow
-
 // See http://www.rricard.me/es6/aws/lambda/nodejs/2015/11/29/es6-on-aws-lambda.html
 // See https://github.com/rricard/lambda-es6-example/blob/master/lib/lambda-types.js
 
-type AmazonCognitoIdentity = {
-    cognito_identity_id: number | string,
-    cognito_identity_pool_id: number | string
+const AmazonCognitoIdentitySchema = {
+    id: '/AmazonCognitoIdentity',
+    type: 'object',
+    properties: {
+        cognito_identity_id: {type: ['number', 'string']},
+        cognito_identity_pool_id: {type: ['number', 'string']},
+    },
+}
+
+const AWSMobileSDKClientSchema = {
+    id: '/AWSMobileSDKClient',
+    type: 'object',
+    properties: {
+        installation_id: {type: ['number', 'string']},
+        app_title: {type: 'string'},
+        app_version_name: {type: 'string'},
+        app_version_code: {type: ['number', 'string']},
+        app_package_name: {type: 'string'},
+    },
+}
+
+const AWSMobileSDKClientEnvSchema = {
+    id: '/AWSMobileSDKClientEnv',
+    type: 'object',
+    properties: {
+        platform_version: {type: ['number', 'string']},
+        platform: {type: 'string'},
+        make: {type: 'any'},
+        model: {type: 'any'},
+        locale: {type: 'string'},
+    },
+}
+
+const AWSMobileSDKClientContextSchema = {
+    id: '/AWSMobileSDKClientContext',
+    type: 'object',
+    properties: {
+        client: {"$ref": "/AWSMobileSDKClient"},
+        Custom: {type: 'any'},
+        env: {"$ref": "/AWSMobileSDKClientEnv"},
+    },
+}
+
+// In the following, aliasing 'any' for expressing functions.. (workaround for documentation)
+
+const CallbackFunctionSchema = {
+    id: '/CallbackFunction',
+    type: 'any', // (error: Error, result: any) => void
 };
 
-type AWSMobileSDKClient = {
-    installation_id: number | string,
-    app_title: string,
-    app_version_name: string,
-    app_version_code: number | string,
-    app_package_name: string
+const SucceedCallbackSchema = {
+    id: '/SucceedCallback',
+    type: 'any', // (result: any) => void
 };
 
-type AWSMobileSDKClientEnv = {
-    platform_version: number | string,
-    platform: string,
-    make: any,
-    model: any,
-    locale: string
+const FailCallbackSchema = {
+    id: '/FailCallback',
+    type: 'any', // (error: Error) => void
 };
 
-
-type AWSMobileSDKClientContext = {
-    client: AWSMobileSDKClient,
-    Custom: any,
-    env: AWSMobileSDKClientEnv
+const IntegerCallbackSchema = {
+    id: '/IntegerCallback',
+    type: 'any', // () => number
 };
 
-type CallbackFunction = (error: Error, result: any) => void;
-
-type InvokedContext = {
-    succeed: (result: any) => void,
-    fail: (error: Error) => void,
-    done: CallbackFunction,
-    getRemainingTimeInMillis: () => number,
-    functionName: string,
-    functionVersion: number | string,
-    invokedFunctionArn: string,
-    memoryLimitInMB: number,
-    awsRequestId: number | string,
-    logGroupName: string,
-    logStreamName: string,
-    identity: ?AmazonCognitoIdentity,
-    clientContext: ?AWSMobileSDKClientContext
+const InvokedContextSchema = {
+    id: '/InvokedContext',
+    type: 'object',
+    properties: {
+        succeed: {"$ref": "/SucceedCallback"},
+        fail: {"$ref": "/FailCallback"},
+        done: {"$ref": "/CallbackFunction"},
+        getRemainingTimeInMillis: {"$ref": "/IntegerCallback"},
+        functionName: {type: 'string'},
+        functionVersion: {type: ['number', 'string']},
+        invokedFunctionArn: {type: 'string'},
+        memoryLimitInMB: {type: 'number'},
+        awsRequestId: {type: ['number', 'string']},
+        logGroupName: {type: 'string'},
+        logStreamName: {type: 'string'},
+        identity: {"$ref": "/AmazonCognitoIdentity"},
+        clientContext: {"$ref": "/AWSMobileSDKClientContext"},
+    },
 };
 
-type InvokingContext = {
-    functionName: string,
-    functionVersion: number | string,
-    invokedFunctionArn: string,
-    memoryLimitInMB: number,
-    awsRequestId: number | string,
-    logGroupName: string,
-    logStreamName: string,
-    identity: ?AmazonCognitoIdentity,
-    clientContext: ?AWSMobileSDKClientContext
+const InvokedFunctionSchema = {
+    id: '/InvokedFunction',
+    type: 'any', // (event: any, context: InvokedContext, callback: CallbackFunction) => void
 };
 
-type InvokedFunction = (event: any, context: InvokedContext, callback: CallbackFunction) => void;
-
-type InvokingFunction = (event: any, context: InvokingContext, callback: CallbackFunction) => Promise<any>;
+const InvokingFunctionSchema = {
+    id: '/InvokingFunction',
+    type: 'any', // (event: any, context: InvokingContext, callback: CallbackFunction) => Promise<any>
+};
 
 const defaultContext = {
     functionName: 'fakeLambda',
@@ -80,8 +111,8 @@ const defaultContext = {
 // If the handler never calls succeed, fail, done, or callback then it could complete (nothing pending)
 // or timeout (something pending) in a real scenario, but here in tests this promise will remain pending.
 module.exports = {
-    promiseToCallLambda(handler: InvokedFunction): InvokingFunction {
-        return (event: any, context: InvokingContext, callback: CallbackFunction) => new Promise((resolve, reject) => {
+    promiseToCallLambda(handler/*: InvokedFunction*/)/*: InvokingFunction*/ {
+        return (event/*: any*/, context/*: InvokingContext*/, callback/*: CallbackFunction*/) => new Promise((resolve, reject) => {
             const invokedContext = Object.assign({}, defaultContext, context, {
                 succeed: resolve,
                 fail: reject,
