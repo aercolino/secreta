@@ -1,7 +1,7 @@
 {
   "name": "@aercolino/secreta-generate-lambda",
   "version": "0.1.0",
-  "description": "AWS Lambda function to generate a pair of RSA keys.",
+  "description": "Generate a pair of RSA keys. (AWS Lambda function)",
   "repository": "aercolino/secreta",
   "engines": {
     "node": ">=6.10.3"
@@ -10,7 +10,7 @@
   "scripts": {
     "flow": "flow",
     "start": "webpack --watch",
-    "test": "mocha --compilers js:babel-core/register tests/**/*.test.js"
+    "test": "nyc mocha --compilers js:babel-core/register tests/**/*.test.js"
   },
   "keywords": [
     "generate",
@@ -22,7 +22,7 @@
   ],
   "author": "Andrea Ercolino <andowebsit.es@gmail.com> (http://andowebsit.es)",
   "homepage": "https://github.com/aercolino/secreta",
-  "bugs": { 
+  "bugs": {
     "url" : "https://github.com/aercolino/secreta/issues",
     "email" : "andowebsit.es+secreta@gmail.com"
   },
