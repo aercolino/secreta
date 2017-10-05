@@ -23,8 +23,8 @@
   "author": "Andrea Ercolino <andowebsit.es@gmail.com> (http://andowebsit.es)",
   "homepage": "https://github.com/aercolino/secreta",
   "bugs": {
-    "url" : "https://github.com/aercolino/secreta/issues",
-    "email" : "andowebsit.es+secreta@gmail.com"
+    "url": "https://github.com/aercolino/secreta/issues",
+    "email": "andowebsit.es+secreta@gmail.com"
   },
   "license": "ISC",
   "dependencies": {
@@ -45,6 +45,7 @@
     "json-loader": "^0.5.7",
     "mocha": "^3.5.1",
     "mock-aws": "^1.2.3",
+    "nyc": "^11.2.1",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "sinon-test": "^2.1.0",
