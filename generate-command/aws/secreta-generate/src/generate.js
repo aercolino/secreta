@@ -75,7 +75,7 @@ function deployFunction(zipFile) {
         },
         FunctionName: functionName,
         Handler: 'generateKeyPair.handler',
-        Role: 'arn:aws:iam::123456789012:role/spk-GenerateKeyPair-role',
+        Role: `arn:aws:iam::123456789012:role/${functionName}`,
         Runtime: 'nodejs6.10',
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
         MemorySize: 128,
