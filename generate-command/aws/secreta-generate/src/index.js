@@ -10,7 +10,10 @@ cli
     .arguments('<id>')
     .description('Create a pair of PKI keys on AWS, store private there, store public here.')
     .option('-k, --key <dir>', 'Where to save the public key.')
-    .option('-r, --region <aws region>', 'The region to use. Overrides config/env settings.')
+    .option('-r, --region <aws region>', 'The region.')
+    .option('-a, --account <number>', 'The account number.')
+    .option('-m, --memory <megabytes>', 'The memory size / CPU power of the machine.')
+    .option('-t, --timeout <seconds>', 'The timeout after which stop the function.')
     .action(code);
 
 cli.parse(process.argv);
