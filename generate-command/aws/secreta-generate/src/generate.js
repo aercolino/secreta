@@ -21,12 +21,36 @@ let lambdaService;
 const functionName = 'Secreta_GenerateKeyPair';
 
 module.exports = (pairId, options = {}) => {
-    const { region } = options;
-    lambdaService = region ? new AWS.Lambda({ region }) : new AWS.Lambda();
     const keyDir = (options.key && path.resolve(options.key)) || os.homedir();
+
+    const region = options.region || 'us-east-1';
+    if (!/^[a-z]{2}-[a-z]+-\d{1,2}$/.test(region)) { // not a perfect match
+        throw new Error(`Expected an AWS region (e.g.: us-east-1). (${account})`);
+    }
+
+    const { account } = options;
+    if (!/^\d{12}$/.test(account)) { // a perfect match
+        throw new Error(`Expected an AWS account number (e.g.: 123456789012). (${account})`);
+    }
+
+    const memory = options.memory || 512;
+    if (!/^\d+$/.test(memory)) {
+        throw new Error(`Expected a memory size, in MB (e.g.: 512). (${memory})`);
+    }
+
+    const timeout = options.timeout || 60;
+    if (!/^\d+$/.test(timeout)) {
+        throw new Error(`Expected a timeout, in seconds (e.g.: 60). (${timeout})`);
+    }
+
     displayLog(`> secreta-generate ${pairId} 
     --key ${keyDir} 
-    --region ${region}`);
+    --region ${region}
+    --account ${account}
+    --memory ${memory}
+    --timeout ${timeout}`);
+
+    lambdaService = new AWS.Lambda({ region });
 
     return deployedFunction()
         .then((functionArn) => {
@@ -34,7 +58,7 @@ module.exports = (pairId, options = {}) => {
                 return null;
             }
             return zipFunction()
-                .then(zipFile => deployFunction(zipFile));
+                .then(zipFile => deployFunction(zipFile, account, memory, timeout));
         })
         .then(() => invokeFunction({ pairId, region }))
         .then((data) => {
@@ -68,18 +92,18 @@ function deployedFunction() {
         });
 }
 
-function deployFunction(zipFile) {
+function deployFunction(zipFile, account, memory, timeout) {
     const params = {
         Code: {
             ZipFile: zipFile,
         },
         FunctionName: functionName,
         Handler: 'generateKeyPair.handler',
-        Role: `arn:aws:iam::123456789012:role/${functionName}`,
+        Role: `arn:aws:iam::${account}:role/${functionName}`,
         Runtime: 'nodejs6.10',
         Description: 'Secreta function to create a pair of keys, store the private key, return the public key.',
-        MemorySize: 128,
-        Timeout: 60,
+        MemorySize: memory,
+        Timeout: timeout,
     };
     debug('deployFunction: about to call lambdaService.createFunction', params);
     return $callMethod(lambdaService, 'createFunction', params)
