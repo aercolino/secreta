@@ -4,7 +4,7 @@ const { $wrapPromise } = require('@aercolino/wrap-promise');
 const fs = require('fs');
 const AWS = require('mock-aws');
 
-const { fixtures } = require('./secreta-generate.fixtures');
+const { fixtures } = require('./generate.fixtures');
 
 const chai = require('chai');
 const sinon = require('sinon');
@@ -81,7 +81,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this, null, fixtures.invokeResponse);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.have.been.called;
@@ -105,7 +105,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this, null, fixtures.invokeResponse);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.not.have.been.called;
@@ -128,7 +128,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.not.have.been.called;
@@ -152,7 +152,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this, new Error('failure 42 from executing AWS SDK'));
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.not.have.been.called;
@@ -176,7 +176,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this, null, fixtures.invokeErrorResponse);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.not.have.been.called;
@@ -199,7 +199,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.have.been.called;
@@ -222,7 +222,7 @@ describe('secreta-generate', function () {
         const lambdaInvoke = stubLambdaInvoke(this);
         const fsWriteFileSync = stubFsWriteFileSync(this);
 
-        return $muted(secretaGenerate, 'pepito')
+        return $muted(secretaGenerate, 'pepito', { account: '123456789012' })
             .then((result) => {
                 expect(lambdaGetFunctionConfiguration).to.have.been.called;
                 expect(zipit).to.have.been.called;
