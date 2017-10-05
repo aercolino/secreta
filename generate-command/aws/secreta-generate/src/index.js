@@ -25,6 +25,6 @@ if (noCommandSpecified) {
 // note to self
 // (form 1) `.option('-k, --key <dir>'...)` vs (form 2) `.option('-k, --key [dir]'...)`
 // (form 1) means that the value is required, (form 2) means that it is optional
-// which in fact mean that (form 2) allows `$ spk create pepito --key something` and `$ spk create pepito --key`
-// while (form 1) only allows `$ spk create pepito --key something` and forbids `$ spk create pepito --key`
-// thus, in the following use cases, it only makes sense to use (1)
+// which in fact mean that (form 2) allows `$ secreta-generate pepito --key something` and
+// `$ secreta-generate pepito --key` while (form 1) only allows `$ secreta-generate pepito --key something`
+// and forbids `$ secreta-generate pepito --key` thus, for my use case, it only makes sense to use (1)
