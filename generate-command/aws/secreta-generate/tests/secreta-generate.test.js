@@ -15,7 +15,7 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 const zipitShell = require('../src/zipit-shell');
-const secretaGenerate = require('../src/secreta-generate');
+const secretaGenerate = require('../src/generate');
 
 function stubZipit(test, error = null, result = null) {
     const stub = test.stub().callsArgWith(1, error, result);
