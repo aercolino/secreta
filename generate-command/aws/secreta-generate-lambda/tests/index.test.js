@@ -12,7 +12,7 @@ const { expect } = chai;
 const fakeError = new Error('Fake error: 42.');
 
 const { promiseToCallLambda } = require('./lambdas-utils');
-const { handler } = require('../src/index');
+const { handler } = require('../src/generateKeyPair');
 
 const invoke = promiseToCallLambda(handler);
 

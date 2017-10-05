@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=6.10.3"
   },
-  "main": "src/index.js",
+  "main": "src/generateKeyPair.js",
   "scripts": {
     "flow": "flow",
     "start": "webpack --watch",
