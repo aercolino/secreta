@@ -154,7 +154,7 @@ function invokeFunction(payload) {
 }
 
 function zipFunction() {
-    const lambdaFilename = path.resolve(`${__dirname}/../../lambdas/generateKeyPair/dist/generateKeyPair.js`);
+    const lambdaFilename = path.resolve(`${__dirname}/../../secreta-generate-lambda/dist/generateKeyPair.js`);
     if (!fs.existsSync(lambdaFilename)) {
         throw new Error(`Expected a lambda function at ${lambdaFilename}`);
     }
