@@ -75,25 +75,57 @@ whatever:
 ## Secreta packages
 
 
+
 ### `secreta-generate`
 
+This is an npm package that installs the `secreta-generate` command.
+
+`secreta-generate` is meant to be used by the person that has the role to generate a pair of private and public RSA keys.
+
+
+#### Installation
+
 ```
-$ secreta-generate <ID> 
-    --public-key [key_dir] 
-    --config [region:account] 
-    --provider AWS
+$ npm install -g @aercolino/secreta-generate
+```
+
+##### Development
+###### command
+
+```
+$ cd .../secreta/generate-command/aws/secreta-generate
+$ npm install -g
+$ npm link
+```
+###### lambda
+```
+$ cd .../secreta/generate-command/aws/secreta-generate-lambda
+$ npm start
+```
+
+#### Usage
+
+```
+$ secreta-generate <key pair ID> 
+    --key <dir for storing the public key> 
+    --region <region where everything happens>
+    --account <the 12 digits og the AWS account>
+    --memory <how big the Lambda machine is (in megabytes)>
+    --timeout <how long to wait before aborting (in seconds)>
 ```
 
 + if there is no `secreta-generate` serverless function on the provider, it uploads it
 + it invokes the `secreta-generate` function, which in turn
 
     + creates a key pair for the given `<ID>`
-    + stores the private key (used for decryption) into a protected location (eg: an AWS SSM param at `/Secreta/privateKey/<ID>`)
-    + protects the location so that only the serverless function will be able to access the private key (eg: creates a `Secreta = privateKey` tag for the SSM param and the role under which the Lambda function will run)
-    + downloads the public key (used for encryption) to the file at `<key_path>/<ID>.pem`
+    + stores the private key (used for decryption) into a protected location (an AWS SSM param at `/Secreta/privateKey/<ID>`)
+    + protects the location so that only the Lambda function will be able to access the private key (with a `Secreta = privateKey` tag)
+    + downloads the public key (used for encryption) to the file at `<key>/<ID>.pem`
+
 
 
 #### Examples
+
 
 ##### Happy path
 
@@ -120,6 +152,7 @@ TaK4f3FJG3fGioNT919lkV8eOj2RZFL9AwilfxJQJ4XSZYwFUjfMqmfMJwx1ACgD
 460 bytes saved to /Users/andrea/fulanito.pem
 ```
 
+
 ##### Error: Bad role
 
 When you didn't properly configure a role for segreta-generate:
@@ -140,6 +173,7 @@ CreateFunction request failed. (InvalidParameterValueException: The role defined
 
     + AmazonSSMFullAccess (AWS managed policy)
     + AWSLambdaBasicExecutionRole (AWS managed policy)
+
 
 #### About the private key 
 
@@ -208,9 +242,31 @@ $ aws kms describe-key --key-id alias/aws/ssm
 }
 ```
 
---
+
 
 ### `secreta-encrypt`
+
+This is an npm package that installs the `secreta-encrypt` command.
+
+`secreta-encrypt` is meant to be used by the person that has the role to encrypt secrets with any of the available public keys.
+
+
+#### Installation
+
+```
+$ npm install -g @aercolino/secreta-encrypt
+```
+
+For development:
+
+```
+$ cd .../secreta/generate-command/aws/secreta-encrypt
+$ npm install -g
+$ npm link
+```
+
+
+#### Usage
 
 ```
 $ secreta-encrypt <ID> 
@@ -232,15 +288,17 @@ $ secreta-encrypt <ID>
 
 ### `secreta-decrypt` module
 
-This Secreta package is a node module for decrypting configuration secrets with a private key. 
+This is an npm package that installs the `secreta-decrypt` module.
 
-+ It should be npm-installed into the AWS Lambda function from which you need your secret configuration.
+`secreta-decrypt` is meant to be used by the programmer that develops the Lambda function that will use a configuration object, with decrypted and merged secrets.
 
-#### Install
+
+#### Installation
 
 ```
 $ npm install --save @aercolino/secreta-decrypt
 ```
+
 
 #### Usage
 
@@ -269,6 +327,96 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
     + it overwrites all `SECRETUM` values it finds in `config` with the values at matching names in the memory object (thus binding names to plaintext values)
     + it throws for any `SECRETUM` which can't be replaced by a secret
     + it doesn't do anything for any secret which is not used to replace anything
+
+
+
+
+## Trivia
+
+### Choosing Secreta
+
+*Secreta* and *secretum* are Latin for *secrets* and *secret*.
+
+Before deciding, I looked for how to say **secret** in many languages (thanks to Google Translate).
+
+asiri
+bí mật
+chinsinsi
+geheim
+geheimnis
+gizli
+gyfrinach
+hemlighet
+hemmelig
+hemmelighed
+imfihlo
+lekunutu
+leyndarmál
+lihim
+miafina
+ngaro
+noslēpums
+nzuzo
+paslaptis
+qarsoodi ah
+rahasia
+rahsia
+rúnda
+saladus
+salaisuus
+secret
+secreto
+secretum
+segredo
+segreto
+sekret
+sekreta
+sekreto
+sekretua
+sekrè
+sigriet
+sir
+siri
+skrivnost
+tajna
+tajný
+tajomstvo
+titok
+tsis pub leejtwg paub
+ìkọkọ
+
+Including all these others that I can't even read (yet):
+
+μυστικό
+нууц
+пинҳонӣ
+сакрэт
+секрет
+тайна
+тајна
+құпия
+գաղտնի
+געהיים
+סוֹד
+خفیہ
+راز
+سر
+गुप्त
+गोप्य
+গোপন
+ગુપ્ત
+இரகசிய
+రహస్య
+ರಹಸ್ಯ
+രഹസ്യ
+රහස්
+ลับ
+ຄວາມລັບ
+လျှို့ဝှက်ချက်
+საიდუმლო
+សម្ងាត់
+秘密
+비밀
 
 --
 the end
