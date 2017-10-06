@@ -93,6 +93,122 @@ $ secreta-generate <ID>
     + downloads the public key (used for encryption) to the file at `<key_path>/<ID>.pem`
 
 
+#### Examples
+
+##### Happy path
+
+When all gets through:
+
+```
+$ secreta-generate fulanito --region us-east-2 --account 123456789012
+> secreta-generate fulanito
+    --key /Users/andrea
+    --region us-east-2
+    --account 123456789012
+    --memory 512
+    --timeout 60
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwQkRI0k58CDpxH83nOrL
+OyThcWfHWDAcH5Kn5MH+ZRBCqbOpNbqzRIsSRgJYk/G8JDgfQC+RF6reUhqiUqt0
+mmnl4QKahe9y5ofz4rZGjaghkg8z1Lyaq1Mm8j/wfitd5Ur80EC5qPITV+akMZ2B
+AMpwdBxTt6Makl2BZyHfD+VpDyJjKz/5JqdkTN76aDUCsQ9OuTIcbICBg0U+TDUU
+KeQqmjn99+F+vYBLTIiJVEsxX8LtImRQK+Jq1+piQIGSWLun7fEIS0E1PqHryMbS
+TaK4f3FJG3fGioNT919lkV8eOj2RZFL9AwilfxJQJ4XSZYwFUjfMqmfMJwx1ACgD
+0wIDAQAB
+-----END PUBLIC KEY-----
+
+460 bytes saved to /Users/andrea/fulanito.pem
+```
+
+##### Error: Bad role
+
+When you didn't properly configure a role for segreta-generate:
+
+```
+$ secreta-generate fulanito --region us-east-2 --account 123456789012
+> secreta-generate fulanito
+    --key /Users/andrea
+    --region us-east-2
+    --account 123456789012
+    --memory 512
+    --timeout 60
+CreateFunction request failed. (InvalidParameterValueException: The role defined for the function cannot be assumed by Lambda.)
+```
+
++ Role ARN: `arn:aws:iam::<account>:role/Secreta_GenerateKeyPair`
++ Permissions:
+
+    + AmazonSSMFullAccess (AWS managed policy)
+    + AWSLambdaBasicExecutionRole (AWS managed policy)
+
+#### About the private key 
+
+Access to the private key should be limited to the Lambda function from which you need to use your secrets.
+
+At the moment, you need to assign the following policy to the role your Lambda will use (e.g. `LambdaBasicExecRole`). As you see it's tag based access. 
+
+Conventional name: `Secreta_GetPrivateKey` (not used in code)
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameter"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "ssm:resourceTag/Secreta": [
+                        "privateKey"
+                    ]
+                }
+            }
+        }
+    ]
+}
+```
+
+You don't really need to see the private key, more so because a nice feature of *Secreta* is that the private key is not even seen by the person creating the key pair.
+
+If the `secreta-generate` command ended showing a public key, it means that all went fine and the private key was saved to an SSM parameter named after the key pair ID. However, here it is:
+
+```
+$ aws ssm get-parameter --name "/Secreta/privateKey/fulanito"
+{
+    "Parameter": {
+        "Type": "SecureString",
+        "Name": "/Secreta/privateKey/fulanito",
+        "Value": "...2492 bytes for this key..."
+    }
+}
+```
+
+If you are concerned about the fact that the name of the parameter discloses its contents (you paranoid), at the moment you are out much luck, because there is no way to use another name, as an option. However, a search and replace in the code, in `secreta-generate` and `secreta-decrypt`, should be successful.
+
+Notice that the private key is a SecureString, thus [it is encrypted with your default KMS key](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-about.html#sysman-param-defaultkms):
+
+```
+$ aws kms describe-key --key-id alias/aws/ssm
+{
+    "KeyMetadata": {
+        "Origin": "AWS_KMS",
+        "KeyId": "a7c79bc4-6989-45de-a486-45ccb94c5cbb",
+        "Description": "Default master key that protects my SSM parameters when no other key is defined",
+        "KeyManager": "AWS",
+        "Enabled": true,
+        "KeyUsage": "ENCRYPT_DECRYPT",
+        "KeyState": "Enabled",
+        "CreationDate": 1504854843.885,
+        "Arn": "arn:aws:kms:us-east-2:123456789012:key/a7c79bc4-6989-45de-a486-45ccb94c5cbb",
+        "AWSAccountId": "123456789012"
+    }
+}
+```
+
+--
 
 ### `secreta-encrypt`
 
@@ -118,7 +234,7 @@ $ secreta-encrypt <ID>
 
 This Secreta package is a node module for decrypting configuration secrets with a private key. 
 
-+ It should be installed into the AWS Lambda function from which you need your secret configuration.
++ It should be npm-installed into the AWS Lambda function from which you need your secret configuration.
 
 #### Install
 
@@ -154,32 +270,5 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
     + it throws for any `SECRETUM` which can't be replaced by a secret
     + it doesn't do anything for any secret which is not used to replace anything
 
-
-
 --
-
-
-
-### Secreta-PrivateKeyAccess Policy for LambdaBasicExecRole
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ssm:GetParameter"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "StringLike": {
-                    "ssm:resourceTag/Secreta": [
-                        "privateKey"
-                    ]
-                }
-            }
-        }
-    ]
-}
-```
+the end
