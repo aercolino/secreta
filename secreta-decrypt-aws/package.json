@@ -1,5 +1,5 @@
 {
-  "name": "@aercolino/secreta-decrypt",
+  "name": "@aercolino/secreta-decrypt-aws",
   "version": "0.1.0",
   "description": "Decrypt configuration secrets with a private key. (node module for AWS Lambda functions)",
   "repository": "aercolino/secreta",
