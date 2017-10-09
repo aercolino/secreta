@@ -44,7 +44,7 @@ module.exports.fixtures = {
         {
             case: 'scalar secret',
             config: { plaintext: 'value', ciphertext: 'SECRETUM' },
-            secrets: { ciphertext: 'whatever' },
+            secrets: { ciphertext: 'some value' },
         },
         {
             case: 'array secret',
@@ -62,7 +62,7 @@ module.exports.fixtures = {
                 some: { deeper: { plaintext: 'value', ciphertext: 'SECRETUM' } },
             },
             secrets: {
-                some: { deeper: { ciphertext: 'SECRETUM' } },
+                some: { deeper: { ciphertext: 'some value' } },
             },
         },
         {
