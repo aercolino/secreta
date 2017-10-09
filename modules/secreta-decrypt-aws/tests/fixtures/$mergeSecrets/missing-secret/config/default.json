@@ -1,0 +1,13 @@
+{
+  "Customer": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": "SECRETUM",
+      "dbName": "customers"
+    },
+    "credit": {
+      "initialLimit": "SECRETUM",
+      "initialDays": 1
+    }
+  }
+}
