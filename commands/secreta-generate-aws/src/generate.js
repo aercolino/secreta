@@ -12,6 +12,8 @@ const path = require('path');
 const zipitShell = require('./zipit-shell');
 const SuperError = require('super-error');
 
+const lambdaFilename = path.resolve(`${__dirname}/lambda/dist/generateKeyPair.js`);
+
 const { $callMethod } = require('promise-to-call');
 
 const AwsServiceError = SuperError.subclass('AwsServiceError');
@@ -154,7 +156,6 @@ function invokeFunction(payload) {
 }
 
 function zipFunction() {
-    const lambdaFilename = path.resolve(`${__dirname}/../../secreta-generate-lambda/dist/generateKeyPair.js`);
     if (!fs.existsSync(lambdaFilename)) {
         throw new Error(`Expected a lambda function at ${lambdaFilename}`);
     }
