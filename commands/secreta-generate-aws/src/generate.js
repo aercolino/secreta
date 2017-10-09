@@ -12,7 +12,7 @@ const path = require('path');
 const zipitShell = require('./zipit-shell');
 const SuperError = require('super-error');
 
-const lambdaFilename = path.resolve(`${__dirname}/lambda/dist/generateKeyPair.js`);
+const lambdaFilename = path.resolve(`${__dirname}/../lambda/dist/generateKeyPair.js`);
 
 const { $callMethod } = require('promise-to-call');
 
