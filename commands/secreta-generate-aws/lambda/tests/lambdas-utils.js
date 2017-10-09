@@ -8,7 +8,7 @@ const AmazonCognitoIdentitySchema = {
         cognito_identity_id: {type: ['number', 'string']},
         cognito_identity_pool_id: {type: ['number', 'string']},
     },
-}
+};
 
 const AWSMobileSDKClientSchema = {
     id: '/AWSMobileSDKClient',
@@ -20,7 +20,7 @@ const AWSMobileSDKClientSchema = {
         app_version_code: {type: ['number', 'string']},
         app_package_name: {type: 'string'},
     },
-}
+};
 
 const AWSMobileSDKClientEnvSchema = {
     id: '/AWSMobileSDKClientEnv',
@@ -32,7 +32,7 @@ const AWSMobileSDKClientEnvSchema = {
         model: {type: 'any'},
         locale: {type: 'string'},
     },
-}
+};
 
 const AWSMobileSDKClientContextSchema = {
     id: '/AWSMobileSDKClientContext',
@@ -42,7 +42,7 @@ const AWSMobileSDKClientContextSchema = {
         Custom: {type: 'any'},
         env: {"$ref": "/AWSMobileSDKClientEnv"},
     },
-}
+};
 
 // In the following, aliasing 'any' for expressing functions.. (workaround for documentation)
 
