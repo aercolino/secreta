@@ -461,13 +461,22 @@ I started by having all packages inside the same project. Later I discovered the
 
 I extracted the npm packages from the Secreta project and individually published each from GitHub to npm:
 
+
 |package|repo|
 |---|---|
 |[@aercolino/secreta-generate-aws](https://www.npmjs.com/package/@aercolino/secreta-generate-aws)|https://github.com/aercolino/secreta-generate-aws|
 |[@aercolino/secreta-encrypt](https://www.npmjs.com/package/@aercolino/secreta-encrypt)|https://github.com/aercolino/secreta-encrypt|
 |[@aercolino/secreta-decrypt-aws](https://www.npmjs.com/package/@aercolino/secreta-decrypt-aws)|https://github.com/aercolino/secreta-decrypt-aws|
 
-I included them back into the Secreta project, for convenience, using `git subtree`:
+I included them back into the Secreta project ([using this guide](https://legacy-developer.atlassian.com/blog/2015/05/the-power-of-git-subtree/)), for convenience:
+
+Example:
+
+```
+$ git subtree add --prefix commands/secreta-generate-aws https://github.com/aercolino/secreta-generate-aws.git master --squash
+```
+
+Result:
 
 |project|directory|
 |---|---|
@@ -476,6 +485,12 @@ I included them back into the Secreta project, for convenience, using `git subtr
 |`secreta-encrypt`|https://github.com/aercolino/secreta/commands/secreta-encrypt|
 |`secreta-decrypt-aws`|https://github.com/aercolino/secreta/modules/secreta-decrypt-aws|
 
+So, the development flow involves 
+
+1. git clone https://github.com/aercolino/secreta
+1. git commit to a feature branch and push to it as much as needed
+1. when ready, merge the feature branch into master (this doesn't update extracted projects)
+1. when needed, git subtree push [using this guide](https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844) (this does update extracted projects)
 
 
 
