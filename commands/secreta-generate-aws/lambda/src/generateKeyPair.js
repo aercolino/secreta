@@ -92,7 +92,7 @@ function createParam(parameterName, parameterValue) {
         Description: 'Secreta RSA Private Key',
         Overwrite: false,
     };
-    if (debug.enabled) {
+    if (dbg.enabled) {
         const cleanParams = Object.assign({}, params, { Value: `[${parameterValue.length} Bytes]` });
         debug('createParam: about to call ssm.putParameter', cleanParams);
     }
