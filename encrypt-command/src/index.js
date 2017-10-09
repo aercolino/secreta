@@ -7,7 +7,7 @@ cli
     .version('0.1.0');
 
 cli
-    .command('encrypt <id>')
+    .arguments('encrypt <id>')
     .description('Encrypt secrets using your local public key.')
     .option('-k, --key <dir>', 'Directory from where to get the public key.')
     .option('-c, --config <dir>', 'Directory from where to get the names of the secrets.')
