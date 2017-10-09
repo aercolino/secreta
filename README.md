@@ -26,7 +26,7 @@
 
 Welcome for any kind of improvement. 
 
-##### TODO:
+##### TODO
 
 1. Support more cloud providers.
 1. Support more platforms of each provider.
@@ -455,6 +455,130 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 
 
+# AWS CLI utilities
+
+
+
+
+## Lambdas
+
+
+
+### List
+
+```
+$ aws lambda list-functions
+{
+    "Functions": [
+        {
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "Version": "$LATEST",
+            "CodeSha256": "...",
+            "FunctionName": "hello-world",
+            "MemorySize": 128,
+            "CodeSize": 258,
+            "FunctionArn": "arn:aws:lambda:us-east-2:...:function:hello-world",
+            "Handler": "index.handler",
+            "Role": "arn:aws:iam::...:role/LambdaBasicExecRole",
+            "Timeout": 3,
+            "LastModified": "2017-09-16T19:10:57.542+0000",
+            "Runtime": "nodejs6.10",
+            "Description": "A function to experiment with"
+        },
+    ...
+}
+```
+
+### Get
+
+```
+$ aws lambda get-function-configuration --function-name Secreta_GenerateKeyPair
+{
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "CodeSha256": "...",
+    "FunctionName": "Secreta_GenerateKeyPair",
+    "CodeSize": 579250,
+    "MemorySize": 512,
+    "FunctionArn": "arn:aws:lambda:us-east-2:...:function:Secreta_GenerateKeyPair",
+    "Version": "$LATEST",
+    "Role": "arn:aws:iam::...:role/Secreta_GenerateKeyPair",
+    "Timeout": 60,
+    "LastModified": "2017-10-06T11:26:31.517+0000",
+    "Handler": "generateKeyPair.handler",
+    "Runtime": "nodejs6.10",
+    "Description": "Secreta function to create a pair of keys, store the private key, return the public key."
+}
+```
+
+### Delete
+
+```
+$ aws lambda delete-function --function-name Secreta_GenerateKeyPair
+(no feedback means OK)
+```
+
+
+
+
+## Parameters
+
+
+
+### List
+
+```
+$ aws ssm describe-parameters
+{
+    "Parameters": [
+        {
+            "KeyId": "alias/aws/ssm",
+            "Name": "/ServerlessPK/privateKey/pepito",
+            "LastModifiedDate": 1506347853.679,
+            "AllowedPattern": "^-----BEGIN RSA PRIVATE KEY-----[\\s\\S]+-----END RSA PRIVATE KEY-----\\s*$",
+            "LastModifiedUser": "arn:aws:sts::...:assumed-role/Secreta_GenerateKeyPair/Secreta_GenerateKeyPair",
+            "Type": "SecureString",
+            "Description": "Secreta RSA Private Key"
+        },
+        ...
+    ]
+}
+```
+
+
+### Get
+
+```
+$ aws ssm get-parameter --name "/Secreta/privateKey/pepito"
+{
+    "Parameter": {
+        "Type": "SecureString",
+        "Name": "/Secreta/privateKey/pepito",
+        "Value": "..."
+    }
+}
+```
+
+
+### Delete
+
+```
+$ aws ssm delete-parameters --names "/Secreta/privateKey/pepito"
+{
+    "InvalidParameters": [],
+    "DeletedParameters": [
+        "/Secreta/privateKey/pepito"
+    ]
+}
+```
+
+
+
+
+
 # Contributor Guide
 
 I started by having all packages inside the same project. Later I discovered the [npm issue 2974](https://github.com/npm/npm/issues/2974) and understood that the only feasible way to have independent packages for npm was to also have independent projects on GitHub.
@@ -509,11 +633,30 @@ $ npm link
 
 
 ### lambda
+
 ```
 $ cd .../secreta-generate-aws/lambda
+$ npm install
 $ npm start
 ```
 
+#### Testing
+
+```
+$ npm test
+```
+
+With debugging logs
+
+```
+$ DEBUG=Secreta npm test
+```
+
+For debugging keys
+
+```
+$ DEBUG=Secreta:Keys npm test
+```
 
 
 
