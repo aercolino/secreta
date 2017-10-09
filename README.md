@@ -17,10 +17,10 @@
 
 [`github:aercolino/secreta`](https://github.com/aercolino/secreta)
 
-+ `secreta-generate` package: a CLI command for generating a pair of RSA keys (public and private).
-+ `secreta-generate-lambda` package, used by the `secreta-generate` package.
-+ `secreta-encrypt` package, a CLI command for encrypting configuration secrets with a public key.
-+ `secreta-decrypt` package, a node module for decrypting configuration secrets with a private key.
++ [`secreta-generate-aws`](https://github.com/aercolino/secreta-generate-aws) package: a CLI command for generating a pair of RSA keys (public and private).
++ `secreta-generate-aws/lambda` package, used by the `secreta-generate-aws` package.
++ [`secreta-encrypt`](https://github.com/aercolino/secreta-encrypt) package, a CLI command for encrypting configuration secrets with a public key.
++ [`secreta-decrypt-aws`](https://github.com/aercolino/secreta-decrypt-aws) package, a node module for decrypting configuration secrets with a private key.
 
 **Contributors**
 
@@ -117,18 +117,18 @@ which *Secreta* will have decrypted with your `pepito` private key from the depl
 
 
 
-## `secreta-generate` command
+## `secreta-generate-aws` command
 
-This is an npm package that installs the `secreta-generate` command.
+This is an npm package that installs the `secreta-generate-aws` command.
 
-`secreta-generate` is meant to be used by the person that has the role to generate a pair of private and public RSA keys.
+`secreta-generate-aws` is meant to be used by the person that has the role to generate a pair of private and public RSA keys.
 
 
 
 ### Installation
 
 ```
-$ npm install -g @aercolino/secreta-generate
+$ npm install -g @aercolino/secreta-generate-aws
 ```
 
 
@@ -136,7 +136,7 @@ $ npm install -g @aercolino/secreta-generate
 ### Usage
 
 ```
-$ secreta-generate <key pair ID> 
+$ secreta-generate-aws <key pair ID> 
     --key <dir where the public key will be stored> 
     --region <region where everything happens>
     --account <the 12 digits of your AWS account>
@@ -144,8 +144,8 @@ $ secreta-generate <key pair ID>
     --timeout <how long to wait before aborting (in seconds)>
 ```
 
-+ if there is no `secreta-generate` serverless function on the provider, it uploads it
-+ it invokes the `secreta-generate` function, which in turn
++ if there is no `secreta-generate-aws` serverless function on the provider, it uploads it
++ it invokes the `secreta-generate-aws` function, which in turn
 
     + creates a key pair for the given `<key pair ID>`
     + stores the private key (used for decryption) into a protected location (an AWS SSM param at `/Secreta/privateKey/<key pair ID>`)
@@ -162,8 +162,8 @@ $ secreta-generate <key pair ID>
 When all gets through:
 
 ```
-$ secreta-generate fulanito --region us-east-2 --account 123456789012
-> secreta-generate fulanito
+$ secreta-generate-aws fulanito --region us-east-2 --account 123456789012
+> secreta-generate-aws fulanito
     --key /Users/andrea
     --region us-east-2
     --account 123456789012
@@ -192,8 +192,8 @@ TaK4f3FJG3fGioNT919lkV8eOj2RZFL9AwilfxJQJ4XSZYwFUjfMqmfMJwx1ACgD
 When you didn't properly configure a role for segreta-generate:
 
 ```
-$ secreta-generate fulanito --region us-east-2 --account 123456789012
-> secreta-generate fulanito
+$ secreta-generate-aws fulanito --region us-east-2 --account 123456789012
+> secreta-generate-aws fulanito
     --key /Users/andrea
     --region us-east-2
     --account 123456789012
@@ -242,7 +242,7 @@ Conventional name: `Secreta_GetPrivateKey` (not used in code)
 
 You don't really need to see the private key, more so because a nice feature of *Secreta* is that the private key is not even seen by the person creating the key pair.
 
-If the `secreta-generate` command ended showing a public key, it means that all went fine and the private key was saved to an SSM parameter named after the key pair ID. However, here it is:
+If the `secreta-generate-aws` command ended showing a public key, it means that all went fine and the private key was saved to an SSM parameter named after the key pair ID. However, here it is:
 
 ```
 $ aws ssm get-parameter --name "/Secreta/privateKey/fulanito"
@@ -255,7 +255,7 @@ $ aws ssm get-parameter --name "/Secreta/privateKey/fulanito"
 }
 ```
 
-If you are concerned about the fact that the name of the parameter discloses its contents (you paranoid), at the moment you are out of much luck, because there is no way to use another name, as an option. However, a search and replace in the code, in `secreta-generate` and `secreta-decrypt`, should be successful.
+If you are concerned about the fact that the name of the parameter discloses its contents (you paranoid), at the moment you are out of much luck, because there is no way to use another name, as an option. However, a search and replace in the code, in `secreta-generate-aws` and `secreta-decrypt-aws`, should be successful.
 
 Notice that the private key is a SecureString, thus [it is encrypted with your default KMS key](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-about.html#sysman-param-defaultkms):
 
@@ -405,18 +405,18 @@ $ xxd /Users/andrea/fulanito.secreta
 ```
 
 
-## `secreta-decrypt` module
+## `secreta-decrypt-aws` module
 
-This is an npm package that installs the `secreta-decrypt` module.
+This is an npm package that installs the `secreta-decrypt-aws` module.
 
-`secreta-decrypt` is meant to be used by the programmer that develops the Lambda function that will use a configuration object, with decrypted and merged secrets.
+`secreta-decrypt-aws` is meant to be used by the programmer that develops the Lambda function that will use a configuration object, with decrypted and merged secrets.
 
 
 
 ### Installation
 
 ```
-$ npm install --save @aercolino/secreta-decrypt
+$ npm install --save @aercolino/secreta-decrypt-aws
 ```
 
 
@@ -426,7 +426,7 @@ $ npm install --save @aercolino/secreta-decrypt
 ```
 const configWithoutSecrets = buildConfig(); // configuration object, with some 'SECRETUM' placeholders
 const pattern = '*.secreta'; // default glob
-const configPromise = require('secreta-decrypt').$mergeSecrets(configWithoutSecrets, pattern);
+const configPromise = require('secreta-decrypt-aws').$mergeSecrets(configWithoutSecrets, pattern);
 
 exports.handler = (event, context, callback) => configPromise.then((config) => {
 
@@ -458,14 +458,14 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 
 
-## secreta-generate
+## secreta-generate-aws
 
 
 
 ### command
 
 ```
-$ cd .../secreta/generate-command/aws/secreta-generate
+$ cd .../secreta-generate-aws
 $ npm install -g
 $ npm link
 ```
@@ -474,7 +474,7 @@ $ npm link
 
 ### lambda
 ```
-$ cd .../secreta/generate-command/aws/secreta-generate-lambda
+$ cd .../secreta-generate-aws/lambda
 $ npm start
 ```
 
@@ -488,7 +488,7 @@ $ npm start
 ### command
 
 ```
-$ cd .../secreta/generate-command/aws/secreta-encrypt
+$ cd .../secreta-encrypt
 $ npm install -g
 $ npm link
 ```
