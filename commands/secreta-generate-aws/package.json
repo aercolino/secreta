@@ -8,7 +8,7 @@
   },
   "main": "src/index.js",
   "bin": {
-    "secreta-generate": "src/index.js"
+    "secreta-generate-aws": "src/index.js"
   },
   "scripts": {
     "test": "nyc mocha tests/**/*.test.js",
