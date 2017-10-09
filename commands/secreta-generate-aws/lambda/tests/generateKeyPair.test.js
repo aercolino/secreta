@@ -1,3 +1,5 @@
+const dbgKeys = require('debug')('Secreta:Keys');
+
 const forge = require('node-forge');
 const AWS = require('mock-aws');
 
@@ -51,7 +53,9 @@ describe('AWS Lambda: generateKeyPair', function () {
     this.timeout(10000);
 
     it('should create a pair of keys, store the private one, and return the public one', sinonTest(function () {
-        // stubRSA(this);
+        if (! dbgKeys.enabled) {
+            stubRSA(this);
+        }
         const ssmPutParameter = stubSsmPutParameter(this);
         const ssmAddTagsToResource = stubSsmAddTagsToResource(this);
         const callbackSpy = this.spy();
