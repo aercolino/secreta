@@ -8,9 +8,8 @@
   },
   "main": "src/generateKeyPair.js",
   "scripts": {
-    "flow": "flow",
     "start": "webpack --watch",
-    "test": "nyc mocha tests/**/*.test.js"
+    "test": "nyc mocha --compilers js:babel-core/register tests/**/*.test.js"
   },
   "keywords": [
     "generate",
@@ -35,6 +34,9 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.112.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
     "chai": "^4.1.2",
     "json-loader": "^0.5.7",
     "mocha": "^3.5.1",

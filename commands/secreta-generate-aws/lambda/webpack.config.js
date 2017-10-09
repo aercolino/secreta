@@ -16,6 +16,11 @@ module.exports = {
     target: 'node',
     module: {
         loaders: [ {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
+            query: JSON.parse(fs.readFileSync(`${__dirname}/.babelrc`, { encoding: 'utf8' })),
+        }, {
             test: /\.json$/,
             loader: 'json-loader',
         } ],
