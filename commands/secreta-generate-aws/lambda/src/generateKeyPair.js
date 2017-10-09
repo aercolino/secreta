@@ -9,11 +9,11 @@
  * @param context
  * @param callback
  */
-const dbgKeys = require('debug')('Secreta:Keys');
 const dbg = require('debug')('Secreta');
+const dbgKeys = require('debug')('Secreta:Keys');
 
-const debugKeys = (...args) => dbgKeys('generateKeyPair', ...args);
 const debug = (...args) => dbg('generateKeyPair', ...args);
+const debugKeys = (...args) => dbgKeys('generateKeyPair', ...args);
 
 const forge = require('node-forge');
 const AWS = require('aws-sdk');
