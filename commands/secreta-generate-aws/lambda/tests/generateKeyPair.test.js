@@ -12,7 +12,7 @@ const { expect } = chai;
 const fakeError = new Error('Fake error: 42.');
 
 const { promiseToCallLambda } = require('./lambdas-utils');
-const { handler } = require('../dist/generateKeyPair');  // run `$ npm start` to create / update `../dist`
+const { handler } = require('../src/generateKeyPair'); // do not require('../dist/generateKeyPair'): mocking can't work
 
 const invoke = promiseToCallLambda(handler);
 
