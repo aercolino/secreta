@@ -15,7 +15,7 @@
 
 **Project**
 
-[`github:aercolino/secreta`](https://github.com/aercolino/secreta)
+[`secreta`](https://github.com/aercolino/secreta)
 
 + [`secreta-generate-aws`](https://github.com/aercolino/secreta-generate-aws) package: a CLI command for generating a pair of RSA keys (public and private).
 + `secreta-generate-aws/lambda` package, used by the `secreta-generate-aws` package.
@@ -24,7 +24,9 @@
 
 **Contributors**
 
-Welcome for any kind of improvement. For example:
+Welcome for any kind of improvement. 
+
+##### TODO:
 
 1. Support more cloud providers.
 1. Support more platforms of each provider.
@@ -454,6 +456,25 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 
 # Contributor Guide
+
+I started by having all packages inside the same project. Later I discovered the [npm issue 2974](https://github.com/npm/npm/issues/2974) and understood that the only feasible way to have independent packages for npm was to also have independent projects on GitHub.
+
+I extracted the npm packages from the Secreta project and individually published each from GitHub to npm:
+
+|package|repo|
+|---|---|
+|[@aercolino/secreta-generate-aws](https://www.npmjs.com/package/@aercolino/secreta-generate-aws)|https://github.com/aercolino/secreta-generate-aws|
+|[@aercolino/secreta-encrypt](https://www.npmjs.com/package/@aercolino/secreta-encrypt)|https://github.com/aercolino/secreta-encrypt|
+|[@aercolino/secreta-decrypt-aws](https://www.npmjs.com/package/@aercolino/secreta-decrypt-aws)|https://github.com/aercolino/secreta-decrypt-aws|
+
+I included them back into the Secreta project, for convenience, using `git subtree`:
+
+|project|directory|
+|---|---|
+|`secreta`|https://github.com/aercolino/secreta|
+|`secreta-generate-aws`|https://github.com/aercolino/secreta/commands/secreta-generate-aws|
+|`secreta-encrypt`|https://github.com/aercolino/secreta/commands/secreta-encrypt|
+|`secreta-decrypt-aws`|https://github.com/aercolino/secreta/modules/secreta-decrypt-aws|
 
 
 
