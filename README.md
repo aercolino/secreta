@@ -1,115 +1,145 @@
-# Secreta
+# *Secreta*
 
-+ Initially for NodeJS / AWS only, later for other systems / providers too.
-+ Project: `github:aercolino/secreta`
-+ There are 4 packages.
-    + The `secreta-generate` package, a CLI command for generating a pair of RSA keys (public and private).
-    
-        + The `secreta-generate-lambda` package, bundled with the `secreta-generate` package.
-    
-    + The `secreta-encrypt` package, a CLI command for encrypting configuration secrets with a public key.
-    + The `secreta-decrypt` package, a node module for decrypting configuration secrets with a private key.
+*Secreta* is a little suite of tools for managing configuration secrets in AWS Lambda functions.
+
+**Features**
+
+1. Asymmetric encryption with RSA keys (public and private), directly generated on AWS.
+1. Local encryption on disk with the public key: both this key and the ciphertext can be shared in the repo.
+1. Remote decryption in memory with the private key: this key is stored encrypted, directly on AWS.
+
+**Requirements**
+
+1. AWS Lambda functions running in the 6.10 NodeJS platform.
+1. [`config`](https://www.npmjs.com/package/config) module.
+
+**Project**
+
+[`github:aercolino/secreta`](https://github.com/aercolino/secreta)
+
++ `secreta-generate` package: a CLI command for generating a pair of RSA keys (public and private).
++ `secreta-generate-lambda` package, used by the `secreta-generate` package.
++ `secreta-encrypt` package, a CLI command for encrypting configuration secrets with a public key.
++ `secreta-decrypt` package, a node module for decrypting configuration secrets with a private key.
+
+**Contributors**
+
+Welcome for any kind of improvement. For example:
+
+1. Support more cloud providers.
+1. Support more platforms of each provider.
+1. Improve keys management.
+1. Support Windows paths.
+1. Inject the configuration module, instead of requiring [`config`](https://www.npmjs.com/package/config). At the moment, *Secreta* uses it just to load your configuration from a directory, and then it works directly on the configuration object. Any configuration module would be fine to build such an object, but we're not there yet.
 
 
-## Secrets storage
 
 
 
-### Inside the project repository
+# Overview
 
-+ Regular config files (eg: `config.yml`), not ignored by the repository
-+ Used to select which secrets we are going to use
-+ `<name_1>` is the name of a non-secret configuration value
-+ `<name_2>` is the name of a secret configuration value
+This overview briefly outlines how *Secreta* is designed to be used. In the following, *development* and *production* are stages of your AWS Lambda function.
+
+
+
+
+## Development
+
+
+
+
+
+### No secrets
+
+The non-secret configuration values are kept in plaintext.
+
++ Regular plaintext configuration files (eg: `config.yml`), not to be ignored by the repository.
++ Used by *Secreta* only to select which secrets you want to deploy.
+
+For example, you could have this regular configuration file
 
 ```
-# config/development.yml
 ...
 whatever:
-  <name_1>: <plaintext-dev-value-1>
-  <name_2>: SECRETUM
+  someName: a value that you don't need to hide
+  someOtherName: SECRETUM
 ...
 ```
 
-```
-# config/production.yml
-...
-whatever:
-  <name_1>: <plaintext-prod-value-1>
-  <name_2>: SECRETUM
-...
-```
 
-+ Special config files (eg: `secrets.yml`), ignored by the repository
-+ Used to store all the secrets
-+ These files need not to be 1:1 with the files in config
-+ The only condition is that these files must configure the same structure
+
+### Secrets
+
+The secrets are kept in plaintext somewhere, and in ciphertext inside the repository.
+
++ Special plaintext config files (eg: `secrets.yml`), **to be ignored by the repository**.
++ Used by you to store all the secrets (i.e. plaintext values corresponding or not to `SECRETUM` values).
++ Feel free to use the best structure for these files: they only must configure the same final structure as the regular configuration.
+
+For example, you could have this special configuration file
 
 ```
-# secrets/development.yml
 ...
 whatever:
-  <name_2>: <plaintext-dev-value-2>
+  someOtherName: a value that you want to keep secret
 ...
 ```
 
+which *Secreta* allows you to encrypt with your `pepito.pem` public key file into a `pepito.secreta` encrypted file. Of course, initially or whenever you see fit, *Secreta* also allows you to generate a new key pair on AWS, store the private key there, and save the public key to a local file.
+
+
+
+
+## Production
+
++ At rest, the secret configuration values are kept in ciphertext into the file at `<key pair ID>.secreta`.
++ At run time, decryption of ciphertext occurs in memory and all `SECRETUM` values are replaced by their plaintext values.
+
+Foe example, if you had the regular and special configuration files above, you would get this merged configuration file
+
 ```
-# secrets/production.yml
-...
-whatever:
-  <name_2>: <plaintext-prod-value-2>
-...
+{
+  whatever: {
+    someName: "a value that you don't need to hide",
+    someOtherName: 'a value that you want to keep secret'
+  }
+}
 ```
 
-
-
-### Inside the provider (eg: AWS)
-
-+ The non-secret configuration values are kept in plaintext into configuration files (eg: `config.yml`)
-+ At rest, the secret configuration values are kept in ciphertext into the file at `<ID>.secreta`
-+ At run time, decryption of `<ID>.secreta` occurs in memory and all the names of `SECRETUM` values are linked to the matching plaintext values
+which *Secreta* will have decrypted with your `pepito` private key from the deployed `pepito.secreta` file.
 
 
 
 
-## Secreta packages
+
+# Packages
 
 
 
-### `secreta-generate`
+
+## `secreta-generate` command
 
 This is an npm package that installs the `secreta-generate` command.
 
 `secreta-generate` is meant to be used by the person that has the role to generate a pair of private and public RSA keys.
 
 
-#### Installation
+
+### Installation
 
 ```
 $ npm install -g @aercolino/secreta-generate
 ```
 
-##### Development
-###### command
 
-```
-$ cd .../secreta/generate-command/aws/secreta-generate
-$ npm install -g
-$ npm link
-```
-###### lambda
-```
-$ cd .../secreta/generate-command/aws/secreta-generate-lambda
-$ npm start
-```
 
-#### Usage
+### Usage
 
 ```
 $ secreta-generate <key pair ID> 
-    --key <dir for storing the public key> 
+    --key <dir where the public key will be stored> 
     --region <region where everything happens>
-    --account <the 12 digits og the AWS account>
+    --account <the 12 digits of your AWS account>
     --memory <how big the Lambda machine is (in megabytes)>
     --timeout <how long to wait before aborting (in seconds)>
 ```
@@ -117,17 +147,17 @@ $ secreta-generate <key pair ID>
 + if there is no `secreta-generate` serverless function on the provider, it uploads it
 + it invokes the `secreta-generate` function, which in turn
 
-    + creates a key pair for the given `<ID>`
-    + stores the private key (used for decryption) into a protected location (an AWS SSM param at `/Secreta/privateKey/<ID>`)
+    + creates a key pair for the given `<key pair ID>`
+    + stores the private key (used for decryption) into a protected location (an AWS SSM param at `/Secreta/privateKey/<key pair ID>`)
     + protects the location so that only the Lambda function will be able to access the private key (with a `Secreta = privateKey` tag)
-    + downloads the public key (used for encryption) to the file at `<key>/<ID>.pem`
+    + downloads the public key (used for encryption) to the file at `<key>/<key pair ID>.pem`
 
 
 
-#### Examples
+### Examples
 
 
-##### Happy path
+#### Happy path
 
 When all gets through:
 
@@ -139,6 +169,9 @@ $ secreta-generate fulanito --region us-east-2 --account 123456789012
     --account 123456789012
     --memory 512
     --timeout 60
+
+(... a few seconds wait ...)
+
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwQkRI0k58CDpxH83nOrL
 OyThcWfHWDAcH5Kn5MH+ZRBCqbOpNbqzRIsSRgJYk/G8JDgfQC+RF6reUhqiUqt0
@@ -153,7 +186,8 @@ TaK4f3FJG3fGioNT919lkV8eOj2RZFL9AwilfxJQJ4XSZYwFUjfMqmfMJwx1ACgD
 ```
 
 
-##### Error: Bad role
+
+#### Error: Bad role
 
 When you didn't properly configure a role for segreta-generate:
 
@@ -171,11 +205,12 @@ CreateFunction request failed. (InvalidParameterValueException: The role defined
 + Role ARN: `arn:aws:iam::<account>:role/Secreta_GenerateKeyPair`
 + Permissions:
 
-    + AmazonSSMFullAccess (AWS managed policy)
-    + AWSLambdaBasicExecutionRole (AWS managed policy)
+    + `AmazonSSMFullAccess` (AWS managed policy)
+    + `AWSLambdaBasicExecutionRole` (AWS managed policy)
 
 
-#### About the private key 
+
+### About the private key 
 
 Access to the private key should be limited to the Lambda function from which you need to use your secrets.
 
@@ -220,7 +255,7 @@ $ aws ssm get-parameter --name "/Secreta/privateKey/fulanito"
 }
 ```
 
-If you are concerned about the fact that the name of the parameter discloses its contents (you paranoid), at the moment you are out much luck, because there is no way to use another name, as an option. However, a search and replace in the code, in `secreta-generate` and `secreta-decrypt`, should be successful.
+If you are concerned about the fact that the name of the parameter discloses its contents (you paranoid), at the moment you are out of much luck, because there is no way to use another name, as an option. However, a search and replace in the code, in `secreta-generate` and `secreta-decrypt`, should be successful.
 
 Notice that the private key is a SecureString, thus [it is encrypted with your default KMS key](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-about.html#sysman-param-defaultkms):
 
@@ -244,63 +279,149 @@ $ aws kms describe-key --key-id alias/aws/ssm
 
 
 
-### `secreta-encrypt`
+
+## `secreta-encrypt` command
 
 This is an npm package that installs the `secreta-encrypt` command.
 
 `secreta-encrypt` is meant to be used by the person that has the role to encrypt secrets with any of the available public keys.
 
 
-#### Installation
+
+### Installation
 
 ```
 $ npm install -g @aercolino/secreta-encrypt
 ```
 
-For development:
+
+
+### Usage
 
 ```
-$ cd .../secreta/generate-command/aws/secreta-encrypt
-$ npm install -g
-$ npm link
+$ secreta-encrypt <key pair ID> 
+    --key <dir where the public key is stored>
+    --config <dir where all the config files are stored> 
+    --secrets <dir where the plaintext secrets are stored> 
+    --output <dir where the encrypted secrets will be stored>
 ```
 
-
-#### Usage
-
-```
-$ secreta-encrypt <ID> 
-    --public-key <dir> 
-    --config <dir> 
-    --secrets <dir> 
-    --output <dir>
-```
-
-+ it loads the configuration ([currently using `node-config`](https://github.com/lorenwest/node-config)) from the files in the directory at `<config_path>`
++ it loads the configuration ([currently using `node-config`](https://github.com/lorenwest/node-config)) from the files in the directory at `<config_dir>`
 + if the configuration has no `SECRETUM` values, then it returns
-+ if the configuration has some `SECRETUM` values without a corresponding value (even empty) at a matching path into the secrets loaded from the directory at `<secrets_path>`, then it throws an exception
-+ it copies each property with a `SECRETUM` value in the configuration from the file at `<secrets_path>` to a memory object
++ if the configuration has some `SECRETUM` values without a corresponding value (even empty) at a matching path into the secrets loaded from the directory at `<secrets_dir>`, then it throws an exception
++ it copies each property with a `SECRETUM` value in the configuration from the file at `<secrets_dir>` to a memory object
 + it JSON-stringifies the memory object to a plaintext
-+ it encrypts the plaintext to a ciphertext, using the public key at `<key_path>/<ID>.pem`
-+ it saves the `<ID>` and the ciphertext into the file at `<encrypted_path>/<ID>.secreta`
++ it encrypts the plaintext to a ciphertext, using the public key at `<key_dir>/<key pair ID>.pem`
++ it saves the `<key pair ID>` and the ciphertext into the file at `<encrypted_dir>/<key pair ID>.secreta`
 
 
 
-### `secreta-decrypt` module
+### Example
+
+#### config
+
+```
+$ cat ~/tmp/config/default.json
+{
+    "plaintext": "value",
+    "scalarSecret": "SECRETUM",
+    "arraySecret": "SECRETUM",
+    "objectSecret": "SECRETUM",
+    "some": {
+        "deeper": {
+            "plaintext": "value",
+            "scalarSecret": "SECRETUM",
+            "arraySecret": "SECRETUM",
+            "objectSecret": "SECRETUM"
+        }
+    }
+}
+```
+
+#### secrets
+
+```
+$ cat ~/tmp/secrets/default.json
+{
+    "scalarSecret": "some value",
+    "arraySecret": ["some", "value"],
+    "objectSecret": {
+        "some": "value"
+    },
+    "some": {
+        "deeper": {
+            "scalarSecret": "some value",
+            "arraySecret": ["some", "value"],
+            "objectSecret": {
+                "some": "value"
+            }
+        }
+    }
+}
+```
+
+#### command
+
+```
+$ secreta-encrypt fulanito --config ~/tmp/config --secrets ~/tmp/secrets
+> secreta-encrypt fulanito
+    --key /Users/andrea
+    --config /Users/andrea/tmp/config
+    --secrets /Users/andrea/tmp/secrets
+    --output /Users/andrea
+256 bytes saved to /Users/andrea/fulanito.secreta
+```
+
+#### result
+
+```
+$ xxd /Users/andrea/fulanito.secreta
+00000000: 06c3 b50b c3a2 c2ba c392 3cc3 bec2 8fc3  ..........<.....
+00000010: a877 c3b1 c38d c289 c3a9 18c3 9776 52c3  .w...........vR.
+00000020: a7c3 940f 6fc2 a1c3 a138 c39e 635c 0ec3  ....o....8..c\..
+00000030: bb61 c39d c2bb c393 67c2 9ac3 a845 2049  .a......g....E I
+00000040: c394 c39d c39c c29d c2ad 0e3a c3b3 17c2  ...........:....
+00000050: 9b04 724f c286 7508 c299 c3b4 c38a 4b79  ..rO..u.......Ky
+00000060: 4776 c38b 15c2 b1c3 a471 c399 c2a4 c29f  Gv.......q......
+00000070: c293 c290 c3ad c2a6 0028 c2b1 7f46 2cc3  .........(...F,.
+00000080: 8144 c3bf 3a35 08c3 a9c3 9056 13c3 a354  .D..:5.....V...T
+00000090: c3b4 015f 0038 45c3 8530 c397 13c3 8ac2  ..._.8E..0......
+000000a0: b541 c2bc c39a 2ac3 b7c3 b1c2 b7c3 98c2  .A....*.........
+000000b0: bec2 b724 7528 c3ae 4ec3 a8c3 862c c2bf  ...$u(..N....,..
+000000c0: c39a c3ae 64c3 9dc3 abc2 99c3 89c3 87c3  ....d...........
+000000d0: b416 49c3 b117 3cc3 9bc2 9838 c3bb c398  ..I...<....8....
+000000e0: c297 2bc3 8c01 6249 66c2 83c2 90c2 961a  ..+...bIf.......
+000000f0: 08c3 ab05 01c2 9423 c39a 70c3 a2c3 a340  .......#..p....@
+00000100: 25c3 b91c 38c3 a517 53c2 8746 2927 c3b2  %...8...S..F)'..
+00000110: 39c2 9079 0bc3 87c3 a0c3 b567 c3a0 c3a5  9..y.......g....
+00000120: c2b4 0572 c39d c2af c38b c2b9 c383 c284  ...r............
+00000130: c2a7 0130 c3b0 c3b2 c3b1 c3be c3a2 c287  ...0............
+00000140: c2b5 c29f c28f c3a4 3cc3 8bc3 b1c2 b63e  ........<......>
+00000150: 356b c387 6bc3 bec2 9a54 1576 c391 c28d  5k..k....T.v....
+00000160: 55c3 85c2 b440 c2a3 58c2 b8c2 87c2 abc2  U....@..X.......
+00000170: 84c2 bbc2 8d6d 3507 6b77 c291 51c2 a9c2  .....m5.kw..Q...
+00000180: 8b08 c28f c391 c3b4 c3b0 28c2 afc3 88c2  ..........(.....
+00000190: 80                                       .
+```
+
+
+## `secreta-decrypt` module
 
 This is an npm package that installs the `secreta-decrypt` module.
 
 `secreta-decrypt` is meant to be used by the programmer that develops the Lambda function that will use a configuration object, with decrypted and merged secrets.
 
 
-#### Installation
+
+### Installation
 
 ```
 $ npm install --save @aercolino/secreta-decrypt
 ```
 
 
-#### Usage
+
+### Usage
 
 ```
 const configWithoutSecrets = buildConfig(); // configuration object, with some 'SECRETUM' placeholders
@@ -319,8 +440,8 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 + the `configPromise` constant above thus caches the resolved config
 
     + it gets each file matching the pattern
-    + it extracts the `<ID>` of the private decryption key from the basename of the matched file
-    + it retrieves the key from the protected location (eg: the AWS SSM param at `/Secreta/privateKey/<ID>`)
+    + it extracts the `<key pair ID>` of the private decryption key from the basename of the matched file
+    + it retrieves the key from the protected location (eg: the AWS SSM param at `/Secreta/privateKey/<key pair ID>`)
     + it reads the ciphertext from the matched file
     + it decrypts the ciphertext to plaintext, using the retrieved key
     + it JSON-parses the plaintext into a memory object
@@ -331,13 +452,61 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 
 
-## Trivia
 
-### Choosing Secreta
+# Contributor Guide
+
+
+
+
+## secreta-generate
+
+
+
+### command
+
+```
+$ cd .../secreta/generate-command/aws/secreta-generate
+$ npm install -g
+$ npm link
+```
+
+
+
+### lambda
+```
+$ cd .../secreta/generate-command/aws/secreta-generate-lambda
+$ npm start
+```
+
+
+
+
+## secreta-encrypt
+
+
+
+### command
+
+```
+$ cd .../secreta/generate-command/aws/secreta-encrypt
+$ npm install -g
+$ npm link
+```
+
+
+
+
+
+# Trivia
+
+
+
+
+## Choosing the name
 
 *Secreta* and *secretum* are Latin for *secrets* and *secret*.
 
-Before deciding, I looked for how to say **secret** in many languages (thanks to Google Translate).
+Before deciding for *Secreta*, I looked for how to say **secret** in many languages (thanks to Google Translate).
 
 asiri
 bí mật
