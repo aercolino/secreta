@@ -598,10 +598,10 @@ I extracted the npm packages from the Secreta project and individually published
 
 I included them back into the Secreta project ([using this guide](https://legacy-developer.atlassian.com/blog/2015/05/the-power-of-git-subtree/)), for convenience:
 
-Example:
-
 ```
 $ git subtree add --prefix commands/secreta-generate-aws https://github.com/aercolino/secreta-generate-aws.git master --squash
+$ git subtree add --prefix commands/secreta-encrypt https://github.com/aercolino/secreta-encrypt.git master --squash
+$ git subtree add --prefix modules/secreta-decrypt-aws https://github.com/aercolino/secreta-decrypt-aws.git master --squash
 ```
 
 Result:
@@ -619,6 +619,12 @@ So, the development flow involves
 1. git commit to a feature branch and push to it as much as needed
 1. when ready, merge the feature branch into master (this doesn't update extracted projects)
 1. when needed, git subtree push [using this guide](https://medium.com/@v/git-subtrees-a-tutorial-6ff568381844) (this does update extracted projects)
+
+```
+$ git subtree push --prefix commands/secreta-generate-aws https://github.com/aercolino/secreta-generate-aws.git master
+$ git subtree push --prefix commands/secreta-encrypt https://github.com/aercolino/secreta-encrypt.git master
+$ git subtree push --prefix modules/secreta-decrypt-aws https://github.com/aercolino/secreta-decrypt-aws.git master
+```
 
 
 
