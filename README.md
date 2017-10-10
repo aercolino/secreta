@@ -455,6 +455,80 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 ### Example
 
+#### Project files
+
+This is a minimum setup to show how decryption works.
+
+```
+config/
+  default.json
+fulanito.secreta
+lambda.js
+  | const configWithoutSecrets = require('config');
+  | const configPromise = require('@aercolino/secreta-decrypt-aws').$mergeSecrets(configWithoutSecrets);
+  | exports.handler = (event, context, callback) => configPromise.then((config) => {
+  |    console.log(config);
+  | });
+node_modules/
+package-lock.json
+package.json
+  | ...
+  | "dependencies": {
+  |   "@aercolino/secreta-decrypt-aws": "github:aercolino/secreta-decrypt-aws",
+  |   "config": "^1.26.2",
+  |   "glob": "^7.1.2"
+  | }
+  | ...
+```
+
++ For `config/default.json` and `fulanito.secreta`, see a previous example.
++ The `lambda.js` script follows the previous template. Here we just log the `config` with decrypted and merged secrets.
++ All `dependencies`in `package.json` are a result of `$ npm install --save @aercolino/secreta-decrypt-aws`. 
+
+#### Function creation
+
+The files above are compressed into `Archive.zip` which is uploaded to AWS into a Lambda function called `SecretaDecryptLambdaExample`.
+
+
+#### Error result
+
+If you test the function, you get an `AccessDeniedException` error:
+
+```
+START RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7 Version: $LATEST
+2017-10-10T15:01:46.008Z	ee0c9e67-adcb-11e7-9715-67bd31c9c4b7	(node:1) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): AccessDeniedException: User: arn:aws:sts::...:assumed-role/LambdaBasicExecRole/SecretaDecryptLambdaExample is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-2:...:parameter/Secreta/privateKey/fulanito
+END RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7
+REPORT RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7	Duration: 958.48 ms	Billed Duration: 1000 ms 	Memory Size: 128 MB	Max Memory Used: 45 MB
+```
+
+
+#### FIX
+
+The above error is due to the fact that the private key parameter is protected by a tag.
+
+The fix is to create in AWS the `Secreta_GetPrivateKey` policy given above and assign it to the role used to execute Lambda, in my case `LambdaBasicExecRole`.
+
+#### Result
+
+Finally, the expected result is got by running the Lambda function again.
+
+```
+START RequestId: e691bc5f-add1-11e7-ae94-6b74207be9b6 Version: $LATEST
+2017-10-10T15:44:31.852Z	e691bc5f-add1-11e7-ae94-6b74207be9b6	Config {
+  plaintext: 'value',
+  scalarSecret: 'some value',
+  arraySecret: [ 'some', 'value' ],
+  objectSecret: { some: 'value' },
+  some: 
+   { deeper: 
+      { plaintext: 'value',
+        scalarSecret: 'some value',
+        arraySecret: [Object],
+        objectSecret: [Object] } } }
+END RequestId: e691bc5f-add1-11e7-ae94-6b74207be9b6
+REPORT RequestId: e691bc5f-add1-11e7-ae94-6b74207be9b6	Duration: 2143.52 ms	Billed Duration: 2200 ms 	Memory Size: 128 MB	Max Memory Used: 46 MB
+```
+
 
 
 
