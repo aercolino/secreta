@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@aercolino/object-paths": "^0.1.0",
+    "debug": "^3.1.0",
     "lodash": "^4.17.4",
     "node-forge": "^0.7.1",
     "node-glob": "^1.2.0",
