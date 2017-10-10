@@ -816,7 +816,7 @@ $ DEBUG=Secreta npm test
 
 
 
-### Install module
+### Install module for running tests
 
 ```
 $ cd modules/secreta-decrypt-aws
@@ -842,6 +842,35 @@ $ DEBUG=Secreta:Secrets npm test
 ```
 $ DEBUG=Secreta,Secreta:Secrets npm test
 ```
+
+
+
+### Install module into a target AWS Lambda
+
+
+#### Install the npm published version
+
+```
+$ npm install @aercolino/secreta-decrypt-aws
+```
+
+
+#### Install the github published version
+
+```
+$ npm install --save github:aercolino/secreta-decrypt-aws
+```
+
+If needed, install after refreshing package:
+
+```
+$ git subtree push ...
+$ npm uninstall --save github:aercolino/secreta-decrypt-aws
+$ npm install --save github:aercolino/secreta-decrypt-aws
+```
+
+
+
 
 
 
