@@ -320,7 +320,7 @@ $ secreta-encrypt <key pair ID>
 
 ### Example
 
-#### config
+#### Config
 
 ```
 $ cat ~/tmp/config/default.json
@@ -340,7 +340,7 @@ $ cat ~/tmp/config/default.json
 }
 ```
 
-#### secrets
+#### Secrets
 
 ```
 $ cat ~/tmp/secrets/default.json
@@ -362,7 +362,7 @@ $ cat ~/tmp/secrets/default.json
 }
 ```
 
-#### command
+#### Command
 
 ```
 $ secreta-encrypt fulanito --config ~/tmp/config --secrets ~/tmp/secrets
@@ -374,7 +374,7 @@ $ secreta-encrypt fulanito --config ~/tmp/config --secrets ~/tmp/secrets
 256 bytes saved to /Users/andrea/fulanito.secreta
 ```
 
-#### result
+#### Result
 
 ```
 $ xxd /Users/andrea/fulanito.secreta
@@ -450,6 +450,10 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
     + it overwrites all `SECRETUM` values it finds in `config` with the values at matching names in the memory object (thus binding names to plaintext values)
     + it throws for any `SECRETUM` which can't be replaced by a secret
     + it doesn't do anything for any secret which is not used to replace anything
+
+
+
+### Example
 
 
 
@@ -618,45 +622,75 @@ So, the development flow involves
 
 
 
+
 ## secreta-generate-aws
 
 
 
-### command
+### Install command
 
 ```
-$ cd .../secreta-generate-aws
+$ cd commands/secreta-generate-aws
 $ npm install -g
 $ npm link
 ```
 
 
 
-### lambda
+### Run command
 
 ```
-$ cd .../secreta-generate-aws/lambda
-$ npm install
-$ npm start
+$ secreta-generate-aws ...
 ```
 
-#### Testing
+```
+$ DEBUG=Secreta secreta-generate-aws ...
+```
+
+
+
+### Test command
 
 ```
+$ cd commands/secreta-generate-aws
 $ npm test
 ```
-
-With debugging logs
 
 ```
 $ DEBUG=Secreta npm test
 ```
 
-For debugging keys
+
+
+### Build lambda
+
+```
+$ cd commands/secreta-generate-aws/lambda
+$ npm install
+$ npm start
+```
+
+
+
+### Test lambda
+
+```
+$ cd commands/secreta-generate-aws/lambda
+$ npm test
+```
+
+```
+$ DEBUG=Secreta npm test
+```
 
 ```
 $ DEBUG=Secreta:Keys npm test
 ```
+
+```
+$ DEBUG=Secreta,Secreta:Keys npm test
+```
+
 
 
 
@@ -664,15 +698,70 @@ $ DEBUG=Secreta:Keys npm test
 
 
 
-### command
+### Install command
 
 ```
-$ cd .../secreta-encrypt
+$ cd commands/secreta-encrypt
 $ npm install -g
 $ npm link
 ```
 
 
+
+### Run command
+
+```
+$ secreta-encrypt ...
+```
+
+```
+$ DEBUG=Secreta secreta-encrypt ...
+```
+
+
+### Test command
+
+```
+$ cd commands/secreta-encrypt
+$ npm test
+```
+
+```
+$ DEBUG=Secreta npm test
+```
+
+
+
+## secreta-decrypt
+
+
+
+### Install module
+
+```
+$ cd modules/secreta-decrypt-aws
+$ npm install
+```
+
+
+### Test module
+
+```
+$ cd modules/secreta-decrypt-aws
+$ npm test
+```
+
+```
+$ DEBUG=Secreta npm test
+```
+
+```
+$ DEBUG=Secreta:Secrets npm test
+```
+
+```
+$ DEBUG=Secreta,Secreta:Secrets npm test
+```
 
 
 
