@@ -455,9 +455,10 @@ exports.handler = (event, context, callback) => configPromise.then((config) => {
 
 ### Example
 
+
 #### Project files
 
-This is a minimum setup to show how decryption works.
+Here is a minimum setup to see for yourself how decryption works.
 
 ```
 config/
@@ -481,18 +482,21 @@ package.json
   | ...
 ```
 
-+ For `config/default.json` and `fulanito.secreta`, see a previous example.
-+ The `lambda.js` script follows the previous template. Here we just log the `config` with decrypted and merged secrets.
-+ All `dependencies`in `package.json` are a result of `$ npm install --save @aercolino/secreta-decrypt-aws`. 
++ For `config/default.json` and `fulanito.secreta`, see the example above.
++ The `lambda.js` script follows the template above. Here we just log the `config` with decrypted and merged secrets. (not a wise thing to do, but it helps us now to show that it does work)
++ All `dependencies`in `package.json` are the result of `$ npm install --save @aercolino/secreta-decrypt-aws`.
+
 
 #### Function creation
 
-The files above are compressed into `Archive.zip` which is uploaded to AWS into a Lambda function called `SecretaDecryptLambdaExample`.
+1. Compress the files above into `Archive.zip`.
+1. Create a Lambda function in AWS called `SecretaDecryptLambdaExample`.
+1. Upload `Archive.zip` to the Lambda.
 
 
 #### Error result
 
-If you test the function, you get an `AccessDeniedException` error:
+If you test the Lambda function (on whatever event), you get an `AccessDeniedException` error like this:
 
 ```
 START RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7 Version: $LATEST
@@ -501,16 +505,18 @@ END RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7
 REPORT RequestId: ee0c9e67-adcb-11e7-9715-67bd31c9c4b7	Duration: 958.48 ms	Billed Duration: 1000 ms 	Memory Size: 128 MB	Max Memory Used: 45 MB
 ```
 
+The above error is due to the fact that the private key parameter is protected by a tag and the Lambda function's role is not associated to such a tag.
+
 
 #### FIX
 
-The above error is due to the fact that the private key parameter is protected by a tag.
+1. Create the `Secreta_GetPrivateKey` policy given above (in *About the private key*).
+1. Assign it to the role used to execute Lambda function, in my case `LambdaBasicExecRole`.
 
-The fix is to create in AWS the `Secreta_GetPrivateKey` policy given above and assign it to the role used to execute Lambda, in my case `LambdaBasicExecRole`.
 
 #### Result
 
-Finally, the expected result is got by running the Lambda function again.
+Finally, test again the Lambda function to get the expected result:
 
 ```
 START RequestId: e691bc5f-add1-11e7-ae94-6b74207be9b6 Version: $LATEST
